@@ -15,23 +15,18 @@ import {NavLink} from 'react-router-dom';
 
 export const publicNavs = [
     {
-        url:'/home',
-        name:'Home',
+        url:'/dashboard',
+        name:'Dashboard',
         icon:<HomeIcon/>
     },
     {
-        url:'/contacts',
-        name:'Contacts',
+        url:'/subscriptions',
+        name:'Subscriptions',
         icon:<ExtensionIcon/>
     }, {
         url:'/expenses',
-        name:'Expenses',
+        name:'Transactions',
         icon:<ExtensionIcon/>
-    },
-    {
-        url:'/movies',
-        name:'Movies',
-        icon:<PhoneIcon/>
     },
     // add new Nav links here as a json object, in this file the public navigations
 ];

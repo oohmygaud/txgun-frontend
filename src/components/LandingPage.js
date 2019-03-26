@@ -14,19 +14,19 @@ const LandingPage = () => (
 
 <br/>
 <Typography variant="display3" gutterBottom align="center">
-        Welcome to Rect Company
+        Welcome to TX Gun
       </Typography>
     
    <Grid container spacing={24} >
         <Grid item xs={12} md={12}>
           <Typography variant="body2" gutterBottom align="center">
-        Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy
+          TXGun is a SaaS web service for developers to be notified in configurable manners of transactions and events processed on a blockchain.
       </Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography gutterBottom align="left" style={{paddingLeft:20}}>
         {`
-         There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet
+         Integrating blockchain technology and cryptography components is highly complicated and a barrier to entry for adoption into blockchain ecosystems for small and medium companies that just need to be notified of payments or changes to a blockchain. Our goal is to design an easy-to-use system, billed on API Credits, for consuming and processing transactions from various blockchains to be forwarded as formatted emails, webhooks, websockets, or summary reports.
         `}
         <Link to="/start"> <Button color="primary"  align="left" style={{marginLeft:20}}>
         Get Started
@@ -38,9 +38,7 @@ const LandingPage = () => (
       </Typography>
         </Grid>
          <Grid item xs={6}>
-          <Image
-        src={bulb}
-      color="inherit" style={{height:40}} imageStyle={{ width: '50', height: '50' }} />
+          
         </Grid>
         <Grid item xs={12}>
          

@@ -1,6 +1,7 @@
-export const login =(uid)=>({
+export const login =(username, password)=>({
     type:'LOGIN',
-    uid
+    username,
+    password
 });
 
 // Asynchronous login action which will be used in other functions
@@ -22,5 +23,10 @@ export const login =(uid)=>({
 
 export const logout =()=>({
     type:'LOGOUT',
+    
+});
+
+export const getProfile =()=>({
+    type:'GET_PROFILE',
     
 });

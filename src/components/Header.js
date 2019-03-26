@@ -30,9 +30,6 @@ class Header extends React.Component{
     super(props);
     this.state = {value: 1,open:false,
       componentsmenuopen:false};
-
-
-     console.log('inside header component ',this.props.userid);
     
   }
 
@@ -50,7 +47,6 @@ class Header extends React.Component{
   };
 
   handleClick=()=>{
-    console.log('clicked');
     this.setState({componentsmenuopen:!this.state.componentsmenuopen});
   };
 
@@ -61,8 +57,8 @@ handleClose = event => {
 
     this.setState({ componentsmenuopen: false });
   };
- conditRenderEssential =()=>this.props.userid?(
-             <Button color="inherit" align="right" onClick={this.props.startLogout}> Logout</Button>):(<Button color="inherit" align="right"><Link to="/login"> Login</Link></Button>)
+ conditRenderEssential =()=>this.props.username?(
+             <Button color="inherit" align="right" onClick={this.props.startLogout}> Logout</Button>):(<Link to="/login"><Button color="inherit" align="right">Login</Button></Link>)
    
   render() { 
 
@@ -82,12 +78,12 @@ handleClose = event => {
       
 
 
-      {!this.props.userid && (<React.Fragment><PublicNavList/> <ExpandNavList/></React.Fragment>)}
+      {!this.props.username && (<React.Fragment><PublicNavList/> <ExpandNavList/></React.Fragment>)}
 
 
       {/*start if testing*/}
  
-{this.props.userid && (<React.Fragment>
+{this.props.username && (<React.Fragment>
   <PrivateNavList/>
   </React.Fragment>
   )}
@@ -106,7 +102,7 @@ handleClose = event => {
             <MenuIcon />
           </IconButton>
           <Typography variant="title" color="inherit" className="headertypoclass" >
-            My React App
+            TX Gun
           </Typography>
 
           {
@@ -127,7 +123,7 @@ handleClose = event => {
 
 
 const mapStateToProps = (state) => ({
-  userid: state.auth.uid
+  username: state.auth.username
 });
 
 const mapDispatchToProps = (dispatch,props)=>({
