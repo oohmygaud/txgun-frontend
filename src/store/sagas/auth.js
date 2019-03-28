@@ -17,6 +17,7 @@ function* startLogin(action) {
         {
             localStorage.setItem('authToken', response.data.access)
             yield put({ type: "LOGIN_SUCCEEDED", username: action.username });
+            yield put({ type: "GET_PROFILE"})
         }
         else
             yield put({ type: "LOGIN_DENIED" });
@@ -49,13 +50,14 @@ function* getProfile(action) {
     try {
         const api = getApi();
         const response = yield call(api.get, 'accounts/profile')
-        console.log("you're already logged in", response)
-        yield put({ type: "GET_PROFILE_SUCCEEDED", username: response.data.username});
+        console.log("You're already logged in as", response.data.username)
+        yield put({ type: "GET_PROFILE_SUCCEEDED", username: response.data.username, user_id: response.data.id});
 
     }
     catch(e) {
         console.log('authtoken invalid, deleting')
         localStorage.removeItem('authToken')
+        window.location = '/';
     }
 }
 

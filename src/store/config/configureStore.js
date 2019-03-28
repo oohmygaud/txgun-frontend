@@ -8,18 +8,21 @@ import createSagaMiddleware from "redux-saga";
 import authSaga from "../sagas/auth";
 import dashboardSaga from "../sagas/dashboard";
 import subscriptionSaga from "../sagas/subscriptions";
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 
 const sagaMiddleware = createSagaMiddleware()
 
-export default () => {
+export default (history) => {
   const store = createStore(
     combineReducers({
-
+      router: connectRouter(history),
       auth: authReducer,
       dashboard: dashboardReducer,
       subscriptions: subscriptionReducer
     }),
-    composeEnhancers(applyMiddleware(thunk), applyMiddleware(sagaMiddleware))
+    composeEnhancers(applyMiddleware(thunk),
+      applyMiddleware(sagaMiddleware),
+      applyMiddleware(routerMiddleware(history)))
   );
 
   sagaMiddleware.run(authSaga)

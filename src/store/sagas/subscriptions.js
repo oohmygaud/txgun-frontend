@@ -1,5 +1,5 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import axios from "axios";
+import { push } from 'connected-react-router'
 import getApi from "../api";
 
 function* loadSubscriptionList(action) {
@@ -27,7 +27,7 @@ function* loadSubscriptionDetail(action) {
 function* loadSubscriptionTransactions(action) {
     try {
         const api = getApi()
-        const response = yield call(api.get, 'transactions/?subscription=' + action.id)
+        const response = yield call(api.get, 'transactions/?subscription=' + action.id + '&page=' + action.page)
         yield put({ type: "LOAD_SUBSCRIPTION_TRANSACTIONS_SUCCEEDED", data: response.data })
     }
     catch (e) {
@@ -35,10 +35,37 @@ function* loadSubscriptionTransactions(action) {
     }
 }
 
+function* createSubscription(action) {
+    try {
+        console.log('create subscription', action)
+        const api = getApi()
+        const response = yield call(api.post, 'subscriptions/', action.data)
+        yield put({ type: "CREATE_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put(push('/subscriptions/'+response.data.id))
+    }
+    catch (e) {
+        console.log('Error creating subscription', e)
+    }
+}
+
+function* editSubscription(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.put, 'subscriptions/'+action.id+'/', action.data)
+        yield put({ type: "EDIT_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put(push('/subscriptions/'+response.data.id))
+    }
+    catch(e) {
+        console.log('Error editing subscription', e)
+    }
+}
+
 function* SubscriptionSaga() {
     yield takeLatest("LOAD_SUBSCRIPTIONS", loadSubscriptionList);
     yield takeLatest("LOAD_SUBSCRIPTION_DETAIL", loadSubscriptionDetail);
     yield takeLatest("LOAD_SUBSCRIPTION_TRANSACTIONS", loadSubscriptionTransactions);
+    yield takeLatest("CREATE_SUBSCRIPTION", createSubscription);
+    yield takeLatest("EDIT_SUBSCRIPTION", editSubscription);
 }
 
 export default SubscriptionSaga;

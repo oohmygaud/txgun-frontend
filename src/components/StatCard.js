@@ -6,9 +6,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 
 const StatCard = (props) => {
     return <Grid item xs={6} sm={3} style={{ marginTop: 10 }}>
-        <Card> 
-            <CardHeader title={ props.value } style={{textAlign: 'center'}}></CardHeader>
-            <CardContent style={{textAlign: 'center'}}>{ props.title }</CardContent>
+        <Card style={{height: 125}}>
+            <CardHeader title={
+                props.precision ?
+                Number.parseFloat(props.value).toFixed(props.precision)
+                : props.value
+            } style={{textAlign: 'center', padding: '32px 0 0 0'}}></CardHeader>
+            <CardContent style={{textAlign: 'center', color: 'grey', fontSize: '0.9em'}}>{ props.title }</CardContent>
         </Card>
     </Grid>
 

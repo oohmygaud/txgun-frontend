@@ -19,16 +19,6 @@ export const publicNavs = [
         name:'Home',
         icon:<HomeIcon/>
     },
-    {
-        url:'/products',
-        name:'Products',
-        icon:<ExtensionIcon/>
-    },
-    {
-        url:'/contact',
-        name:'Contact',
-        icon:<PhoneIcon/>
-    },
     // add new Nav links here as a json object, in this file the public navigations
 ];
 

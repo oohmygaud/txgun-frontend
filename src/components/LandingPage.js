@@ -5,8 +5,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Image from 'material-ui-image';
-import bulb from '../assets/img/bulb1.png';
 import {Link} from 'react-router-dom';
+import gun from '../assets/img/gun5.png';
 
 
 const LandingPage = () => (
@@ -38,14 +38,9 @@ const LandingPage = () => (
       </Typography>
         </Grid>
          <Grid item xs={6}>
-          
+         <img src={gun} alt="Gun" style={{height:'100%', width:'100%'}}/>
         </Grid>
-        <Grid item xs={12}>
-         
-        </Grid>
-       {/* <Grid item xs={6}>
-          <Paper >xs=6</Paper>
-        </Grid>*/}
+        
         </Grid>
 
      <Grid container spacing={24} >

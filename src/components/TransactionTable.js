@@ -4,12 +4,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Grid from '@material-ui/core/Grid';
 import TimeAgo from 'timeago-react';
 import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 
 const TransactionTable = (props) => {
-    return <Grid item xs={12} style={{ marginTop: 10 }}>
+    return <Grid item xs={12}>
         <Card>
             <Table>
                 <TableHead>
@@ -33,19 +33,19 @@ const TransactionTable = (props) => {
                                     target="_new"
                                     style={{ color: 'blue', textDecoration: 'underlined' }}
                                 >
-                                    {transaction.tx_hash.substr(0,8)}...
+                                    {transaction.tx_hash.substr(0, 8)}...
                                 </a>
                             </TableCell>
-                            <TableCell>{transaction.from_address.substr(0,8)}...</TableCell>
+                            <TableCell>{transaction.from_address.substr(0, 8)}...</TableCell>
                             <TableCell>{
                                 transaction.is_token ?
-                                    transaction.token_to.substr(0,8) + '...' :
-                                    transaction.to_address.substr(0,8) + '...'
+                                    transaction.token_to.substr(0, 8) + '...' :
+                                    transaction.to_address.substr(0, 8) + '...'
                             }</TableCell>
                             <TableCell>{
                                 transaction.is_token ?
                                     transaction.token_amount + " TOKENS" :
-                                    transaction.value/10E18 + " ETH"
+                                    transaction.value / 10E18 + " ETH"
                             }</TableCell>
                         </TableRow>
                     ))}

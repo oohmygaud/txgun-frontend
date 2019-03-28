@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 class SubscriptionPage extends React.Component {
     componentWillMount() {
@@ -19,26 +20,28 @@ class SubscriptionPage extends React.Component {
         if (!this.props.subscriptions)
             return <Typography>Loading...</Typography>
         return <Grid item xs={12} style={{ marginTop: 10 }}>
-        <Card>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Watched Address</TableCell>
-                        <TableCell>Status</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {this.props.subscriptions.results.map(subscription => (
-                        <TableRow key={subscription.id}>
-                            <TableCell>
-                            <Link to={'/subscriptions/'+ subscription.id}>{subscription.watched_address}</Link></TableCell>
-                            <TableCell>{subscription.status}</TableCell>
+            <Card>
+                <Link to="/subscriptions/create">
+                    <Button>Create</Button></Link>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Watched Address</TableCell>
+                            <TableCell>Status</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </Card>
-    </Grid>
+                    </TableHead>
+                    <TableBody>
+                        {this.props.subscriptions.results.map(subscription => (
+                            <TableRow key={subscription.id}>
+                                <TableCell>
+                                    <Link to={'/subscriptions/' + subscription.id}>{subscription.watched_address}</Link></TableCell>
+                                <TableCell>{subscription.status}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Card>
+        </Grid>
     }
 }
 

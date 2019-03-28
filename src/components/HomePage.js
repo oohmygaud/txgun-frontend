@@ -15,7 +15,8 @@ import { connect } from 'react-redux';
 import charts from 'fusioncharts/fusioncharts.charts';
 import ReactFC from 'react-fusioncharts';
 import StatCard from './StatCard';
-import TransactionTable from './DashboardTransactionTable';
+import TransactionTable from './TransactionTable';
+
 
 // Pass fusioncharts as a dependency of charts
 charts(FusionCharts)
@@ -126,13 +127,14 @@ class HomePage extends React.Component {
 
         return <React.Fragment>
 
-            <Grid container spacing={24} >
+            <Grid container spacing={16} >
                 <StatCard title='Active Subscriptions' value={this.props.dashboard.active_subscriptions} />
                 <StatCard title='Transactions Today' value={this.props.dashboard.transactions_today} />
-                <StatCard title='Total Ether Transferred' value={this.props.dashboard.total_ether/10E18} />
-                <StatCard title='Total Tokens Transferred' value={this.props.dashboard.total_tokens} />
+                <StatCard title='Ether Today' value={this.props.dashboard.total_ether/10E18} precision={4} />
+                <StatCard title='Tokens Today' value={this.props.dashboard.total_tokens} precision={4} />
                 <TransactionTable transactions={this.props.dashboard.transactions}/>
             </Grid>
+            
         </React.Fragment>
     }
 }

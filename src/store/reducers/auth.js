@@ -16,7 +16,7 @@ export default (state = {}, action) => {
 
         case 'GET_PROFILE_SUCCEEDED':
             console.log('Welcome back');
-            return { ...state, username: action.username };
+            return { ...state, username: action.username, user_id: action.user_id };
 
         default: return state;
     }

@@ -8,10 +8,14 @@ import './styles/styles.css';
 import { theme } from './theme/theme';
 import configureStore from './store/config/configureStore';
 import { getProfile } from './store/actions/auth';
+import { createBrowserHistory } from 'history'
+
 require("babel-core/register");
 require("babel-polyfill");
 
-const store = configureStore();
+export const history = createBrowserHistory()
+
+const store = configureStore(history);
 store.subscribe(() => {
   console.log("New state:", store.getState());
 });
@@ -21,7 +25,7 @@ store.subscribe(() => {
 const App = () => (
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
-      <AppRouter />
+      <AppRouter history={history} />
     </MuiThemeProvider>
   </Provider>
 );

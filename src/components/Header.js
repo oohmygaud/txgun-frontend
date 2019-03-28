@@ -17,7 +17,6 @@ import Paper from '@material-ui/core/Paper';
 import {Link} from 'react-router-dom';
 import PublicNavList from '../navs/publicNav';
 import PrivateNavList from '../navs/privateNav';
-import ExpandNavList from '../navs/expandNavs'
 import {logout} from '../store/actions/auth';
 import {NavLink} from 'react-router-dom';
 
@@ -78,7 +77,7 @@ handleClose = event => {
       
 
 
-      {!this.props.username && (<React.Fragment><PublicNavList/> <ExpandNavList/></React.Fragment>)}
+      {!this.props.username && (<React.Fragment><PublicNavList/></React.Fragment>)}
 
 
       {/*start if testing*/}
@@ -102,7 +101,7 @@ handleClose = event => {
             <MenuIcon />
           </IconButton>
           <Typography variant="title" color="inherit" className="headertypoclass" >
-            TX Gun
+            <Link to='/'>TX Gun</Link>
           </Typography>
 
           {
