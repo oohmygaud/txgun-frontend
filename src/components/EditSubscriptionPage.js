@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import { connect } from 'react-redux';
+import ArchiveIcon from '@material-ui/icons/Archive';
 
 export class EditSubscription extends React.Component {
     state = { }
@@ -96,15 +97,19 @@ export class EditSubscription extends React.Component {
                 />
             </FormGroup>
             <Button
+                style={{marginRight: '1em'}}
                 type="submit"
                 variant="raised"
                 color="primary"
                 onClick={this.OnSubmit}>
+            
                 <Typography variant="button" gutterBottom className="logintypography">
                     Edit Subscription
                     </Typography>
             </Button>
+            <Button color="secondary" ><ArchiveIcon />Archive</Button>
         </form>
+        
         </Card>
     }
 

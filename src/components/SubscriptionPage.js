@@ -19,14 +19,27 @@ class SubscriptionPage extends React.Component {
     render() {
         if (!this.props.subscriptions)
             return <Typography>Loading...</Typography>
-        return <Grid item xs={12} style={{ marginTop: 10 }}>
-            <Card>
+        return <React.Fragment>
+            <Grid container>
+                <Grid item sm xs={12} style={{ marginTop: '1em' }}>
+                <Link to={'/'}><Button>Back to Dashboard</Button></Link>
+                    
+                </Grid>
+                <Grid item sm={6} xs={12} style={{ marginBottom: '0.5em', textAlign:"center" }}>
+                <h2>Subscriptions</h2>
+                    
+                </Grid>
+                <Grid item sm xs={4} style={{ marginTop: '1em', textAlign:"right" }}>
                 <Link to="/subscriptions/create">
-                    <Button>Create</Button></Link>
+                        <Button>Create</Button></Link>
+                </Grid>
+            </Grid>
+            <Card>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Watched Address</TableCell>
+                            <TableCell>Nickname</TableCell>
                             <TableCell>Status</TableCell>
                         </TableRow>
                     </TableHead>
@@ -34,14 +47,16 @@ class SubscriptionPage extends React.Component {
                         {this.props.subscriptions.results.map(subscription => (
                             <TableRow key={subscription.id}>
                                 <TableCell>
-                                    <Link to={'/subscriptions/' + subscription.id}>{subscription.watched_address}</Link></TableCell>
+                                    <Link to={'/subscriptions/' + subscription.id}>{subscription.watched_address}</Link>
+                                </TableCell>
+                                <TableCell>{subscription.nickname}</TableCell>
                                 <TableCell>{subscription.status}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </Card>
-        </Grid>
+        </React.Fragment>
     }
 }
 

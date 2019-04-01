@@ -30,3 +30,7 @@ export const getProfile =()=>({
     type:'GET_PROFILE',
     
 });
+
+export const doRefreshToken =()=>({
+    type:'DO_REFRESH_TOKEN',
+});

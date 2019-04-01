@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import PhoneIcon from '@material-ui/icons/Phone';
+import RssFeedIcon from '@material-ui/icons/RssFeed';
 
 /* import your desired icon from material-ui icons library */
 import {NavLink} from 'react-router-dom';
@@ -22,7 +23,7 @@ export const publicNavs = [
     {
         url:'/subscriptions',
         name:'Subscriptions',
-        icon:<ExtensionIcon/>
+        icon:<RssFeedIcon />
     }, 
     // add new Nav links here as a json object, in this file the public navigations
 ];

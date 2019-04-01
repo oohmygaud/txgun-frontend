@@ -15,7 +15,7 @@ class SubscriptionDetailPage extends React.Component {
 
     loadPage(page) {
         this.props.loadSubscriptionTransactions(this.props.match.params.id, page)
-        this.setState({ page: page})
+        this.setState({ page: page })
     }
 
     componentWillMount() {
@@ -26,15 +26,41 @@ class SubscriptionDetailPage extends React.Component {
     render() {
         if (!this.props.subscription || !this.props.transactions)
             return <Typography>Loading...</Typography>
-        return <Grid container spacing={24}>
-            <Link to={'/subscriptions/' + this.props.subscription.id + '/edit'}>
-                <Button>Edit</Button>
-            </Link>
-            <TransactionTable transactions={this.props.transactions.results} />
-            <Button disabled={this.props.transactions.previous == null} onClick={(e) => this.loadPage(this.state.page - 1)}>Previous Page</Button>
-            <Button disabled={this.props.transactions.next == null} onClick={(e) => this.loadPage(this.state.page + 1)}>Next Page</Button>Page {this.state.page}
-            
-        </Grid>
+        return <React.Fragment>
+            <Grid container >
+                <Grid item sm xs={12} style={{ marginTop: '1em' }}>
+                    <Link to={'/subscriptions/'}> <Button>Back to Subscriptions</Button></Link>
+                </Grid>
+
+                <Grid item sm={6} xs={8} style={{marginBottom:'0.5em', textAlign:"center"}} >
+                    <h2>{this.props.subscription.nickname}</h2>
+                </Grid>
+
+                <Grid item sm xs={4} style={{ marginTop: '1em', textAlign:"right" }}>
+                    <Link to={'/subscriptions/' + this.props.subscription.id + '/edit'}>
+                        <Button color="primary">Edit</Button>
+                    </Link>
+                </Grid>
+            </Grid>
+            <Grid container spacing={24}>
+                <TransactionTable transactions={this.props.transactions.results} />
+            </Grid>
+            <Grid container justify="space-between">
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.transactions.previous == null}
+                        onClick={(e) => this.loadPage(this.state.page - 1)}>Previous Page</Button>
+                </Grid>
+
+
+                <Grid item><Button disabled>Page {this.state.page}</Button></Grid>
+
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.transactions.next == null}
+                        onClick={(e) => this.loadPage(this.state.page + 1)}>Next Page</Button>
+                </Grid>
+            </Grid>
+
+        </React.Fragment>
 
     }
 }
