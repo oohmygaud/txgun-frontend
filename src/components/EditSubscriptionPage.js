@@ -1,5 +1,5 @@
 import React from 'react';
-import { editSubscription, loadSubscriptionDetail } from '../store/actions/subscriptions';
+import { editSubscription, loadSubscriptionDetail, archiveSubscription, unarchiveSubscription } from '../store/actions/subscriptions';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import ArchiveIcon from '@material-ui/icons/Archive';
 
 export class EditSubscription extends React.Component {
-    state = { }
+    state = {}
 
     componentWillMount() {
         this.props.clearDetails()
@@ -27,8 +27,7 @@ export class EditSubscription extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.subscription)
-        {
+        if (nextProps.subscription) {
             console.log('Setting toggle values', nextProps.subscription)
             this.setState({
                 watch_token_transfers: nextProps.subscription.watch_token_transfers,
@@ -40,7 +39,7 @@ export class EditSubscription extends React.Component {
     render() {
         if (!this.props.subscription || !this.props.user_id)
             return <Typography>Loading...</Typography>
-        
+
 
 
         return <Card><form onSubmit={this.OnSubmit}>
@@ -97,19 +96,28 @@ export class EditSubscription extends React.Component {
                 />
             </FormGroup>
             <Button
-                style={{marginRight: '1em'}}
+                style={{ marginRight: '1em' }}
                 type="submit"
                 variant="raised"
                 color="primary"
                 onClick={this.OnSubmit}>
-            
+
                 <Typography variant="button" gutterBottom className="logintypography">
                     Edit Subscription
                     </Typography>
             </Button>
-            <Button color="secondary" ><ArchiveIcon />Archive</Button>
+            {!this.props.subscription.archived_at ?
+                <Button color="secondary" onClick={(e) => this.props.archive(this.props.subscription.id)} >
+                    <ArchiveIcon />Archive
+                </Button>
+                :
+                <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
+                    <ArchiveIcon />Unarchive
+                </Button>
+            }
+
         </form>
-        
+
         </Card>
     }
 
@@ -121,7 +129,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     loadSubscriptionDetail: (id) => dispatch(loadSubscriptionDetail(id)),
     editSubscription: (id, data) => dispatch(editSubscription(id, data)),
-    clearDetails: () => dispatch({type: 'CLEAR_SUBSCRIPTION_DETAILS'})
+    archive: (id) => dispatch(archiveSubscription(id)),
+    unarchive:(id) => dispatch(unarchiveSubscription(id)),
+    clearDetails: () => dispatch({ type: 'CLEAR_SUBSCRIPTION_DETAILS' })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditSubscription);

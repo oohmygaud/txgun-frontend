@@ -1,6 +1,6 @@
-export const loadSubscriptionList = () => ({
+export const loadSubscriptionList = (options) => ({
     type: 'LOAD_SUBSCRIPTIONS',
-
+    options
 });
 
 export const loadSubscriptionDetail = (id) => ({
@@ -25,12 +25,23 @@ export const editSubscription = (id, data) => ({
     data
 });
 
-export const pauseSubscription = (id) => ({
+export const pauseSubscription = (id, options) => ({
     type: 'PAUSE_SUBSCRIPTION',
+    id, options
+});
+
+export const unpauseSubscription = (id, options) => ({
+    type: 'UNPAUSE_SUBSCRIPTION',
+    id, options
+});
+
+export const archiveSubscription = (id) => ({
+    type: 'ARCHIVE_SUBSCRIPTION',
     id
 });
 
-export const unpauseSubscription = (id) => ({
-    type: 'UNPAUSE_SUBSCRIPTION',
+export const unarchiveSubscription = (id) => ({
+    type: 'UNARCHIVE_SUBSCRIPTION',
     id
 });
+

@@ -20,6 +20,7 @@ export default (state = {}, action) => {
         case 'EDIT_SUBSCRIPTION_SUCCEEDED':
             return { ...state, edited: action.data };
             
+    
         default: return state;
     }
 };

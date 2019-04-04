@@ -5,7 +5,11 @@ import getApi from "../api";
 function* loadSubscriptionList(action) {
     try {
         const api = getApi()
-        const response = yield call(api.get, 'subscriptions')
+        let url = 'subscriptions/?';
+        console.log(action)
+        if(action.options && action.options.show_archived)
+            url += '&show_archived=true';
+        const response = yield call(api.get, url)
         yield put({ type: "LOAD_SUBSCRIPTIONS_SUCCEEDED", data: response.data })
     }
     catch (e) {
@@ -65,7 +69,7 @@ function* pauseSubscription(action) {
         const api = getApi()
         const response = yield call(api.post, 'subscriptions/'+action.id+'/pause/', action.data)
         yield put({ type: "PAUSE_SUBSCRIPTION_SUCCEEDED", data: response.data })
-        yield put({ type: "LOAD_SUBSCRIPTIONS" })
+        yield put({ type: "LOAD_SUBSCRIPTIONS", options: action.options })
     }
     catch(e) {
         console.log('Error pausing subscription', e)
@@ -77,10 +81,36 @@ function* unpauseSubscription(action) {
         const api = getApi()
         const response = yield call(api.post, 'subscriptions/'+action.id+'/unpause/', action.data)
         yield put({ type: "UNPAUSE_SUBSCRIPTION_SUCCEEDED", data: response.data })
-        yield put({ type: "LOAD_SUBSCRIPTIONS" })
+        yield put({ type: "LOAD_SUBSCRIPTIONS", options: action.options })
     }
     catch(e) {
         console.log('Error unpausing subscription', e)
+    }
+}
+
+function* archiveSubscription(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.post, 'subscriptions/'+action.id+'/archive/', action.data)
+        yield put({ type: "ARCHIVE_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put({ type: "LOAD_SUBSCRIPTION_DETAIL_SUCCEEDED", data: response.data })
+        yield put(push('/subscriptions/'))
+    }
+    catch(e) {
+        console.log('Error archiving subscription', e)
+    }
+}
+
+function* unarchiveSubscription(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.post, 'subscriptions/'+action.id+'/unarchive/', action.data)
+        yield put({ type: "UNARCHIVE_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put({ type: "LOAD_SUBSCRIPTION_DETAIL_SUCCEEDED", data: response.data })
+        yield put(push('/subscriptions/'))
+    }
+    catch(e) {
+        console.log('Error unarchiving subscription', e)
     }
 }
 
@@ -92,6 +122,8 @@ function* SubscriptionSaga() {
     yield takeLatest("EDIT_SUBSCRIPTION", editSubscription);
     yield takeLatest("PAUSE_SUBSCRIPTION", pauseSubscription);
     yield takeLatest("UNPAUSE_SUBSCRIPTION", unpauseSubscription);
+    yield takeLatest("ARCHIVE_SUBSCRIPTION", archiveSubscription);
+    yield takeLatest("UNARCHIVE_SUBSCRIPTION", unarchiveSubscription);
 }
 
 export default SubscriptionSaga;

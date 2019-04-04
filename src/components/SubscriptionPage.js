@@ -16,11 +16,27 @@ import Switch from '@material-ui/core/Switch';
 
 class SubscriptionPage extends React.Component {
 
-    state = {}
+    state = {
+        show_archived: false,
+    }
+
+    searchOptions() {
+        return {
+            show_archived: this.state.show_archived
+        }
+    }
 
     componentWillMount() {
-        this.props.loadSubscriptionList()
+        this.props.loadSubscriptionList(this.searchOptions())
     }
+    toggleArchived() {
+        this.setState({show_archived: !this.state.show_archived});
+        this.props.loadSubscriptionList({
+            ...this.searchOptions(),
+            show_archived: !this.state.show_archived
+        })
+    }
+
     render() {
         if (!this.props.subscriptions)
             return <Typography>Loading...</Typography>
@@ -37,6 +53,18 @@ class SubscriptionPage extends React.Component {
                 <Grid item sm xs={4} style={{ marginTop: '1em', textAlign: "right" }}>
                     <Link to="/subscriptions/create">
                         <Button>Create</Button></Link>
+                </Grid>
+                <Grid container>
+                    <FormControlLabel control={
+                        <Switch
+                            onChange={(e) => this.toggleArchived()}
+                            value="show_archived"
+                            color="secondary"
+                            checked={this.state.show_archived}
+                        />
+                    }
+                    label="Show Archived"
+                    />
                 </Grid>
             </Grid>
             <Card>
@@ -59,14 +87,16 @@ class SubscriptionPage extends React.Component {
                                     <FormControlLabel control={
                                         <Switch
                                             onChange={(e) => subscription.status == "active" ?
-                                                             this.props.pause(subscription.id) : this.props.unpause(subscription.id)}
+                                                this.props.pause(subscription.id, this.searchOptions()) 
+                                                : this.props.unpause(subscription.id, this.searchOptions())}
+                                            disabled={subscription.archived_at != null}
                                             value="status"
                                             color="secondary"
                                             checked={subscription.status == "active"}
                                         />
                                     }
+                                    label={subscription.status}
                                     />
-                                    {subscription.status}
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -82,9 +112,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadSubscriptionList: () => dispatch(loadSubscriptionList()),
-    pause: (id) => dispatch(pauseSubscription(id)),
-    unpause: (id) => dispatch(unpauseSubscription(id))
+    loadSubscriptionList: (options) => dispatch(loadSubscriptionList(options)),
+    pause: (id, options) => dispatch(pauseSubscription(id, options)),
+    unpause: (id, options) => dispatch(unpauseSubscription(id, options))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubscriptionPage);
