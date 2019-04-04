@@ -4,10 +4,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import PropTypes from "prop-types";
 import HomeIcon from '@material-ui/icons/Home';
-import ExtensionIcon from '@material-ui/icons/Extension';
-import PhoneIcon from '@material-ui/icons/Phone';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import RssFeedIcon from '@material-ui/icons/RssFeed';
 
 /* import your desired icon from material-ui icons library */
@@ -24,6 +22,11 @@ export const publicNavs = [
         url:'/subscriptions',
         name:'Subscriptions',
         icon:<RssFeedIcon />
+    },
+    {
+        url:'/api_keys',
+        name:'API Keys',
+        icon:<VpnKeyIcon />
     }, 
     // add new Nav links here as a json object, in this file the public navigations
 ];

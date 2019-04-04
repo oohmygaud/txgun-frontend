@@ -24,3 +24,13 @@ export const editSubscription = (id, data) => ({
     id,
     data
 });
+
+export const pauseSubscription = (id) => ({
+    type: 'PAUSE_SUBSCRIPTION',
+    id
+});
+
+export const unpauseSubscription = (id) => ({
+    type: 'UNPAUSE_SUBSCRIPTION',
+    id
+});

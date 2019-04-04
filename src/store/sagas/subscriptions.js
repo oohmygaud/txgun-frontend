@@ -60,12 +60,38 @@ function* editSubscription(action) {
     }
 }
 
+function* pauseSubscription(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.post, 'subscriptions/'+action.id+'/pause/', action.data)
+        yield put({ type: "PAUSE_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put({ type: "LOAD_SUBSCRIPTIONS" })
+    }
+    catch(e) {
+        console.log('Error pausing subscription', e)
+    }
+}
+
+function* unpauseSubscription(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.post, 'subscriptions/'+action.id+'/unpause/', action.data)
+        yield put({ type: "UNPAUSE_SUBSCRIPTION_SUCCEEDED", data: response.data })
+        yield put({ type: "LOAD_SUBSCRIPTIONS" })
+    }
+    catch(e) {
+        console.log('Error unpausing subscription', e)
+    }
+}
+
 function* SubscriptionSaga() {
     yield takeLatest("LOAD_SUBSCRIPTIONS", loadSubscriptionList);
     yield takeLatest("LOAD_SUBSCRIPTION_DETAIL", loadSubscriptionDetail);
     yield takeLatest("LOAD_SUBSCRIPTION_TRANSACTIONS", loadSubscriptionTransactions);
     yield takeLatest("CREATE_SUBSCRIPTION", createSubscription);
     yield takeLatest("EDIT_SUBSCRIPTION", editSubscription);
+    yield takeLatest("PAUSE_SUBSCRIPTION", pauseSubscription);
+    yield takeLatest("UNPAUSE_SUBSCRIPTION", unpauseSubscription);
 }
 
 export default SubscriptionSaga;
