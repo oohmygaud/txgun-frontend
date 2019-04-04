@@ -35,10 +35,10 @@ function* loadAPIKeyDetail(action) {
         console.log('Error loading api key detail', e)
     }
 }
-function* SubscriptionSaga() {
+function* APIKeySaga() {
     yield takeLatest("LOAD_API_KEYS", loadAPIKeyList);
     yield takeLatest("CREATE_API_KEY", createAPIKey);
     yield takeLatest("LOAD_API_KEY_DETAIL", loadAPIKeyDetail);
 }
 
-export default SubscriptionSaga;
+export default APIKeySaga;

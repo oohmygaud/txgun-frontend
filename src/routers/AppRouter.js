@@ -15,9 +15,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import APIKeyPage from '../components/APIKeyPage';
 import APIKeyDetail from '../components/APIKeyDetail';
 import CreateAPIKey from '../components/CreateAPIKey';
-
-
-
+import APICreditPage from '../components/APICreditPage';
 
 
 const AppRouter = ({history}) => (
@@ -35,7 +33,7 @@ const AppRouter = ({history}) => (
          <PrivateRoute path="/api_keys/create" component={CreateAPIKey} />
          <PrivateRoute path="/api_keys/:id" component={APIKeyDetail} />
          <PrivateRoute path="/api_keys" component={APIKeyPage} />
-         
+         <PrivateRoute path="/billing" component={APICreditPage} />
        
         <Route path="/login" component={LoginPage}  />
         <PublicRoute path="/about" component={AboutPage} />
