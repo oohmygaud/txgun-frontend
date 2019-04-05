@@ -68,7 +68,7 @@ export class LoginPage extends Component {
             </div>
             <Typography>{this.props.error ? "Incorrect Username or Password" : null}</Typography>
 
-            <Button type="submit" variant="raised" color="primary" onClick={this.OnClickLogin}><Typography variant="button" gutterBottom className="logintypography">
+            <Button type="submit" variant="contained" color="primary" onClick={this.OnClickLogin}><Typography variant="button" gutterBottom className="logintypography">
 
               Login
       </Typography></Button>

@@ -9,6 +9,7 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import { connect } from 'react-redux';
 import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 export class EditSubscription extends React.Component {
     state = {}
@@ -31,7 +32,8 @@ export class EditSubscription extends React.Component {
             console.log('Setting toggle values', nextProps.subscription)
             this.setState({
                 watch_token_transfers: nextProps.subscription.watch_token_transfers,
-                summary_notifications: nextProps.subscription.summary_notifications
+                summary_notifications: nextProps.subscription.summary_notifications,
+                include_pricing_data: nextProps.subscription.include_pricing_data
             });
         }
     }
@@ -94,11 +96,23 @@ export class EditSubscription extends React.Component {
                     }
                     label="Summary Notifications"
                 />
+
+                <FormControlLabel
+                    control={
+                        <Switch
+                            onChange={(e) => this.setState({ include_pricing_data: e.target.checked })}
+                            value="include_pricing_data"
+                            color="primary"
+                            checked={this.state.include_pricing_data}
+                        />
+                    }
+                    label="Include Pricing Data"
+                />
             </FormGroup>
             <Button
                 style={{ marginRight: '1em' }}
                 type="submit"
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.OnSubmit}>
 
@@ -112,7 +126,7 @@ export class EditSubscription extends React.Component {
                 </Button>
                 :
                 <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
-                    <ArchiveIcon />Unarchive
+                    <UnarchiveIcon />Unarchive
                 </Button>
             }
 
@@ -130,7 +144,7 @@ const mapDispatchToProps = (dispatch) => ({
     loadSubscriptionDetail: (id) => dispatch(loadSubscriptionDetail(id)),
     editSubscription: (id, data) => dispatch(editSubscription(id, data)),
     archive: (id) => dispatch(archiveSubscription(id)),
-    unarchive:(id) => dispatch(unarchiveSubscription(id)),
+    unarchive: (id) => dispatch(unarchiveSubscription(id)),
     clearDetails: () => dispatch({ type: 'CLEAR_SUBSCRIPTION_DETAILS' })
 });
 

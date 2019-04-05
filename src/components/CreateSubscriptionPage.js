@@ -26,6 +26,7 @@ export class CreateSubscription extends React.Component {
         notify_url: "",
         watch_token_transfers: false,
         summary_notifications: false,
+        include_pricing_data: false,
         widget_use_api_key: false,
         widget_api_key: null
     }
@@ -96,9 +97,19 @@ export class CreateSubscription extends React.Component {
                                 }
                                 label="Summary Notifications"
                             />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        onChange={(e) => this.setState({ include_pricing_data: e.target.checked })}
+                                        value="include_pricing_data"
+                                        color="primary"
+                                    />
+                                }
+                                label="Include Pricing Data"
+                            />
                         </FormGroup>
                         <Button type="submit"
-                            variant="raised"
+                            variant="contained"
                             color="primary"
                             onClick={this.OnSubmit}>
                             <Typography variant="button" gutterBottom className="logintypography">
@@ -153,7 +164,8 @@ curl -XPOST \\
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
     "watch_token_transfers": "${this.state.watch_token_transfers}",
-    "summary_notifications": "${this.state.summary_notifications}"
+    "summary_notifications": "${this.state.summary_notifications}",
+    "include_pricing_data": "${this.state.include_pricing_data}"
     
     
   }' \\
