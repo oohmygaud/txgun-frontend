@@ -1,5 +1,6 @@
-export const loadAPIKeyList = () => ({
+export const loadAPIKeyList = (page) => ({
     type: 'LOAD_API_KEYS',
+    page
 
 });
 

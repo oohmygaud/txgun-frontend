@@ -18,12 +18,22 @@ class SubscriptionPage extends React.Component {
 
     state = {
         show_archived: false,
+        page: 1
     }
 
     searchOptions() {
         return {
-            show_archived: this.state.show_archived
+            show_archived: this.state.show_archived,
+            page: this.state.page
         }
+    }
+
+    loadPage(page) {
+        this.props.loadSubscriptionList({
+            ...this.searchOptions(),
+            page: page
+        })
+        this.setState({ page: page })
     }
 
     componentWillMount() {
@@ -103,6 +113,20 @@ class SubscriptionPage extends React.Component {
                     </TableBody>
                 </Table>
             </Card>
+            <Grid container justify="space-between">
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.subscriptions.previous == null}
+                        onClick={(e) => this.loadPage(this.state.page - 1)}>Previous Page</Button>
+                </Grid>
+
+
+                <Grid item><Button disabled>Page {this.state.page}</Button></Grid>
+
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.subscriptions.next == null}
+                        onClick={(e) => this.loadPage(this.state.page + 1)}>Next Page</Button>
+                </Grid>
+            </Grid>
         </React.Fragment>
     }
 }

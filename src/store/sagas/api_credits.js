@@ -5,7 +5,10 @@ import getApi from "../api";
 function* loadAPICredits(action) {
     try {
         const api = getApi()
-        const response = yield call(api.get, 'api_credits')
+        let url = 'api_credits/?';
+        if(action.page)
+            url += '&page='+ action.page;
+        const response = yield call(api.get, url)
         yield put({ type: "LOAD_API_CREDITS_SUCCEEDED", data: response.data })
     }
     catch (e) {

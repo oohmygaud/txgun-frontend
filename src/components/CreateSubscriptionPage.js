@@ -1,14 +1,19 @@
 import React from 'react';
 import { createSubscription } from '../store/actions/subscriptions';
+import { loadAPIKeyList } from '../store/actions/api_keys';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import Card from '@material-ui/core/Card';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 require('prismjs');
 require('prismjs/themes/prism.css');
 import PrismCode from 'react-prism';
@@ -20,7 +25,9 @@ export class CreateSubscription extends React.Component {
         notify_email: "",
         notify_url: "",
         watch_token_transfers: false,
-        summary_notifications: false
+        summary_notifications: false,
+        widget_use_api_key: false,
+        widget_api_key: null
     }
 
     OnSubmit = (e) => {
@@ -31,7 +38,18 @@ export class CreateSubscription extends React.Component {
         this.props.createSubscription(form_data);
     };
 
+    componentWillMount() {
+        this.props.loadAPIKeyList()
+    }
+
     render() {
+        if(!this.props.api_keys) return "Loading..."
+
+        let defaultApiKey = this.props.api_keys.results && this.props.api_keys.results[0].key
+
+        let useApiKey = this.state.widget_api_key || defaultApiKey;
+
+        const apiKey = this.state.widget_use_api_key ? useApiKey : localStorage.getItem('authToken');
 
         return <Grid container spacing={24}>
             <Grid item xs={6}>
@@ -91,13 +109,43 @@ export class CreateSubscription extends React.Component {
                 </Card>
             </Grid>
             <Grid item xs={6}>
-                <Card>
+                <Card style={{ padding: "1em" }}>
+                    <h3>API Usage Example</h3>
+                    <FormControlLabel control={
+                        <Switch
+                            onChange={(e) => this.setState({ widget_use_api_key: e.target.checked })}
+                            value="widget_use_api_key"
+                            color="secondary"
+                            checked={this.state.widget_use_api_key == true}
+                            disabled={defaultApiKey == false}
+                        />
+                    }
+                        label={this.state.widget_use_api_key == true ? "API Key" : "JWT"}
+                    />
+                    {this.state.widget_use_api_key ? 
+                    <FormControl>
+                        <InputLabel>
+                            API Key
+                        </InputLabel>
+                        <Select
+                            value={useApiKey}
+                            onChange={(e) => this.setState({ widget_api_key: e.target.value })}
+                            autoWidth
+                        >
+                        {this.props.api_keys.results.map(api_key=> (
+                            <MenuItem value={api_key.key} key={api_key.id}>
+                                <em>{api_key.nickname}</em>
+                            </MenuItem>  
+                        ))}
+                        </Select>
+                    </FormControl>
+                    : null }
                     <PrismCode component="pre" className="language-javascript">
-                       
-{`
+
+                        {`
 curl -XPOST \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${localStorage.getItem('authToken')}" \\
+  -H "Authorization: Bearer ${apiKey}" \\
   -d '{
     "user": ${this.props.user_id},
     "nickname": "${this.state.nickname}",
@@ -111,7 +159,7 @@ curl -XPOST \\
   }' \\
   https://txgun.io/subscriptions/
 `}
-                       
+
                     </PrismCode>
                 </Card>
             </Grid>
@@ -121,9 +169,11 @@ curl -XPOST \\
 }
 const mapStateToProps = (state) => ({
     user_id: state.auth.user_id,
+    api_keys: state.api_keys.data
 })
 const mapDispatchToProps = (dispatch) => ({
-    createSubscription: (data) => dispatch(createSubscription(data))
+    createSubscription: (data) => dispatch(createSubscription(data)),
+    loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateSubscription);

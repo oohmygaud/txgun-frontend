@@ -14,6 +14,16 @@ import Button from '@material-ui/core/Button';
 import TimeAgo from 'timeago-react';
 
 class APIKeyPage extends React.Component {
+
+    state = {
+        page: 1
+    }
+
+    loadPage(page) {
+        this.props.loadAPIKeyList(page)
+        this.setState({ page: page })
+    }
+
     componentWillMount() {
         this.props.loadAPIKeyList()
     }
@@ -55,6 +65,20 @@ class APIKeyPage extends React.Component {
                     </TableBody>
                 </Table>
             </Card>
+            <Grid container justify="space-between">
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.api_keys.previous == null}
+                        onClick={(e) => this.loadPage(this.state.page - 1)}>Previous Page</Button>
+                </Grid>
+
+
+                <Grid item><Button disabled>Page {this.state.page}</Button></Grid>
+
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.api_keys.next == null}
+                        onClick={(e) => this.loadPage(this.state.page + 1)}>Next Page</Button>
+                </Grid>
+            </Grid>
         </React.Fragment>
     }
 }
@@ -64,7 +88,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadAPIKeyList: () => dispatch(loadAPIKeyList())
+    loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(APIKeyPage);

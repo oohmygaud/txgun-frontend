@@ -1,5 +1,6 @@
-export const loadAPICredits = () => ({
+export const loadAPICredits = (page) => ({
     type: 'LOAD_API_CREDITS',
+    page
 });
 
 export const loadCreditBalance = () => ({

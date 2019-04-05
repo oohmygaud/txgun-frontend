@@ -5,7 +5,10 @@ import getApi from "../api";
 function* loadAPIKeyList(action) {
     try {
         const api = getApi()
-        const response = yield call(api.get, 'api_keys')
+        let url = 'api_keys/?';
+        if(action.page)
+            url += '&page='+ action.page;
+        const response = yield call(api.get, url)
         yield put({ type: "LOAD_API_KEYS_SUCCEEDED", data: response.data })
     }
     catch (e) {

@@ -9,6 +9,8 @@ function* loadSubscriptionList(action) {
         console.log(action)
         if(action.options && action.options.show_archived)
             url += '&show_archived=true';
+        if(action.options && action.options.page)
+            url += '&page='+ action.options.page;
         const response = yield call(api.get, url)
         yield put({ type: "LOAD_SUBSCRIPTIONS_SUCCEEDED", data: response.data })
     }

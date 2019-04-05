@@ -9,6 +9,16 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 
 class APICreditPage extends React.Component {
+
+    state = {
+        page: 1
+    }
+
+    loadPage(page) {
+        this.props.loadAPICredits(page)
+        this.setState({ page: page })
+    }
+
     componentWillMount() {
         this.props.loadAPICredits(),
         this.props.loadCreditBalance()
@@ -37,6 +47,20 @@ class APICreditPage extends React.Component {
             <Grid container spacing={24}>
                 <CreditTable api_credits={this.props.api_credits}/>
             </Grid>
+            <Grid container justify="space-between">
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.api_credits.previous == null}
+                        onClick={(e) => this.loadPage(this.state.page - 1)}>Previous Page</Button>
+                </Grid>
+
+
+                <Grid item><Button disabled>Page {this.state.page}</Button></Grid>
+
+                <Grid item>
+                    <Button color="secondary" disabled={this.props.api_credits.next == null}
+                        onClick={(e) => this.loadPage(this.state.page + 1)}>Next Page</Button>
+                </Grid>
+            </Grid>
         </React.Fragment>
     }
 }
@@ -48,7 +72,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadAPICredits: () => dispatch(loadAPICredits()),
+    loadAPICredits: (page) => dispatch(loadAPICredits(page)),
     loadCreditBalance: () => dispatch(loadCreditBalance())
 });
 
