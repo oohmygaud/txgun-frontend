@@ -43,7 +43,7 @@ class SubscriptionDetailPage extends React.Component {
                 </Grid>
             </Grid>
             <Grid container spacing={24}>
-                <TransactionTable transactions={this.props.transactions.results} />
+                <TransactionTable transactions={this.props.transactions.results} show_pricing_info={this.props.subscription.include_pricing_data} />
             </Grid>
             <Grid container justify="space-between">
                 <Grid item>

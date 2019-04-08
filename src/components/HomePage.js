@@ -132,7 +132,7 @@ class HomePage extends React.Component {
                 <StatCard title='Transactions Today' value={this.props.dashboard.transactions_today} />
                 <StatCard title='Ether Today' value={this.props.dashboard.total_ether/10E18} precision={4} />
                 <StatCard title='Tokens Today' value={this.props.dashboard.total_tokens} precision={4} />
-                <TransactionTable transactions={this.props.dashboard.transactions}/>
+                <TransactionTable transactions={this.props.dashboard.transactions} show_pricing_info />
             </Grid>
             
         </React.Fragment>
