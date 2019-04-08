@@ -1,13 +1,14 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from "axios";
-import getApi from "../api";
+import { getApi } from "../api";
 import { push } from 'connected-react-router'
 
 
 function* startLogin(action) {
     try {
-        const response = yield call(axios.post,
-            'http://localhost:8000/api/token/',
+        const api = getApi();
+        const response = yield call(api.post,
+            'api/token/',
             {
                 username: action.username,
                 password: action.password

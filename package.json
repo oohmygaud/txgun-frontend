@@ -4,8 +4,8 @@
   "description": "react-boiler-plate-code",
   "main": "app.js",
   "scripts": {
-    "build": "webpack",
-    "dev-server": "webpack-dev-server",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
     "sync": "aws s3 sync --acl public-read public/ s3://txgun.io",
     "invalidate": "aws cloudfront create-invalidation --distribution-id EL0A14GZ0RF4B --paths='/*'",
     "deploy": "npm run build && npm run sync && npm run invalidate"
@@ -42,10 +42,12 @@
     "redux": "^4.0.0",
     "redux-saga": "^1.0.2",
     "redux-thunk": "^2.2.0",
+    "save": "^2.3.3",
     "style-loader": "^0.21.0",
     "timeago-react": "^2.0.1",
     "webpack": "^4.6.0",
-    "webpack-dev-server": "^3.1.3"
+    "webpack-dev-server": "^3.1.3",
+    "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
     "url-loader": "^1.0.1",

@@ -1,6 +1,6 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from "axios";
-import getApi from "../api";
+import  { getApi } from "../api";
 
 function* loadDashboard(action) {
     try {

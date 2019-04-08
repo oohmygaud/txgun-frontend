@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const getApi = () => {
+export const baseURL = (process.env.NODE_ENV !== 'production') ? 'http://localhost:8000/' : 'https://api.txgun.io/'
+
+export const getApi = () => {
 
     return axios.create({
-        baseURL: 'http://localhost:8000/',
+        baseURL,
         headers: { 'Authorization': "Bearer "+ localStorage.getItem('authToken') }
     })
 }
-
-export default getApi;

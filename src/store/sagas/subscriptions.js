@@ -1,6 +1,6 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import { push } from 'connected-react-router'
-import getApi from "../api";
+import { getApi } from "../api";
 
 function* loadSubscriptionList(action) {
     try {

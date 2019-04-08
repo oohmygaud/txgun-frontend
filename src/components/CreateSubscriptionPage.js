@@ -17,6 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 require('prismjs');
 require('prismjs/themes/prism.css');
 import PrismCode from 'react-prism';
+import { baseURL } from '../store/api';
 
 export class CreateSubscription extends React.Component {
     state = {
@@ -46,9 +47,13 @@ export class CreateSubscription extends React.Component {
     render() {
         if(!this.props.api_keys) return "Loading..."
 
-        let defaultApiKey = this.props.api_keys.results && this.props.api_keys.results[0].key
+        const authHeader = this.state.widget_use_api_key ? 'Token' : 'Bearer'
 
-        let useApiKey = this.state.widget_api_key || defaultApiKey;
+        const results = this.props.api_keys && this.props.api_keys.results
+
+        const defaultApiKey = results && results.length && results[0].key
+
+        const useApiKey = this.state.widget_api_key || defaultApiKey;
 
         const apiKey = this.state.widget_use_api_key ? useApiKey : localStorage.getItem('authToken');
 
@@ -151,12 +156,13 @@ export class CreateSubscription extends React.Component {
                         </Select>
                     </FormControl>
                     : null }
+
                     <PrismCode component="pre" className="language-javascript">
 
                         {`
 curl -XPOST \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${apiKey}" \\
+  -H "Authorization: ${authHeader} ${apiKey}" \\
   -d '{
     "user": ${this.props.user_id},
     "nickname": "${this.state.nickname}",
@@ -169,7 +175,7 @@ curl -XPOST \\
     
     
   }' \\
-  https://txgun.io/subscriptions/
+  ${baseURL}subscriptions/
 `}
 
                     </PrismCode>
