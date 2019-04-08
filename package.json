@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev-server": "webpack-dev-server",
-    "sync": "aws s3 sync public/ s3://txgun.io",
+    "sync": "aws s3 sync --acl public-read public/ s3://txgun.io",
     "invalidate": "aws cloudfront create-invalidation --distribution-id EL0A14GZ0RF4B --paths='/*'",
     "deploy": "npm run build && npm run sync && npm run invalidate"
   },
