@@ -19,6 +19,11 @@ const TransactionTable = (props) => {
                         <TableCell>From</TableCell>
                         <TableCell>To</TableCell>
                         <TableCell>Value</TableCell>
+                        { props.show_pricing_info ?
+                        <TableCell>Price</TableCell>
+                         : null
+                        }
+                        
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -47,6 +52,14 @@ const TransactionTable = (props) => {
                                     transaction.token_amount + " TOKENS" :
                                     transaction.value / 10E18 + " ETH"
                             }</TableCell>
+                             { props.show_pricing_info ?
+                                <TableCell>
+                                { transaction.pricing_info && transaction.pricing_info.fiat > 0.01 ?
+                                    transaction.pricing_info.fiat.toFixed(2) + ' ' + transaction.pricing_info.currency
+                                    : null
+                                }
+                                </TableCell>
+                            : null }
                         </TableRow>
                     ))}
                 </TableBody>
