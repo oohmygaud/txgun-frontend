@@ -16,8 +16,15 @@ export default (state = {}, action) => {
 
         case 'GET_PROFILE_SUCCEEDED':
             console.log('Welcome back');
+            return { ...state, user: action.user, username: action.username, user_id: action.user_id };
+
+        case 'REGISTRATION_SUCCEEDED':
+            console.log('Welcome');
             return { ...state, username: action.username, user_id: action.user_id };
 
+        case 'REGISTRATION_DENIED':
+            console.log('Registration Denied');
+            return { ...state, registration_errors: action.errors}
         default: return state;
     }
 };

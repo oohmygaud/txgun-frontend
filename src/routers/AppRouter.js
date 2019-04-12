@@ -16,6 +16,7 @@ import APIKeyPage from '../components/APIKeyPage';
 import APIKeyDetail from '../components/APIKeyDetail';
 import CreateAPIKey from '../components/CreateAPIKey';
 import APICreditPage from '../components/APICreditPage';
+import Registration from '../components/Registration';
 
 
 const AppRouter = ({history}) => (
@@ -25,6 +26,7 @@ const AppRouter = ({history}) => (
       <Switch>
         
         <PublicRoute path="/" component={LandingPage} exact={true} />
+        <PublicRoute path="/registration" component={Registration} exact={true} />
          <PrivateRoute path="/home" component={HomePage} />
          <PrivateRoute path="/subscriptions/:id/edit" component={EditSubscription} />
          <PrivateRoute path="/subscriptions/create" component={CreateSubscription} />

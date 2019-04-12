@@ -34,3 +34,11 @@ export const getProfile =()=>({
 export const doRefreshToken =()=>({
     type:'DO_REFRESH_TOKEN',
 });
+
+export const register = (username, email, password, password_confirm) => ({
+    type: "REGISTER",
+    username,
+    email,
+    password,
+    password_confirm
+});

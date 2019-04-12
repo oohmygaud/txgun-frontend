@@ -18,6 +18,8 @@ require('prismjs');
 require('prismjs/themes/prism.css');
 import PrismCode from 'react-prism';
 import { baseURL } from '../store/api';
+import Checkbox from '@material-ui/core/Checkbox';
+require('prismjs/components/prism-python')
 
 export class CreateSubscription extends React.Component {
     state = {
@@ -29,16 +31,29 @@ export class CreateSubscription extends React.Component {
         summary_notifications: false,
         include_pricing_data: false,
         widget_use_api_key: false,
-        widget_api_key: null
+        widget_api_key: null,
+        widget_python: null
     }
 
-    OnSubmit = (e) => {
+    OnSubmit(e) {
         e.preventDefault();
         const form_data = { ...this.state, user: this.props.user_id };
 
         console.log('Creating', form_data)
         this.props.createSubscription(form_data);
     };
+
+    OnChangeDefaultEmailSwitch(e) {
+        this.setState({ default_email: e.target.checked })
+        if (e.target.checked)
+            this.setState({ notify_email: this.props.user.email })
+    }
+
+    OnChangeDefaultURLSwitch(e) {
+        this.setState({ default_url: e.target.checked })
+        if (e.target.checked)
+            this.setState({ notify_url: this.props.user.default_notify_url })
+    }
 
     componentWillMount() {
         this.props.loadAPIKeyList()
@@ -74,12 +89,40 @@ export class CreateSubscription extends React.Component {
                         <FormGroup row>
                             <TextField id="notify_email"
                                 label="Notify Email"
-                                onChange={(e) => this.setState({ notify_email: e.target.value })} />
+                                onChange={(e) => this.setState({ notify_email: e.target.value })}
+                                value={this.state.notify_email}
+                                disabled={this.state.default_email}
+                                 />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
+                                        value='default_email'
+                                        color='secondary'
+                                    />
+                                }
+                                label='Default Email'
+                            />
                         </FormGroup>
                         <FormGroup row>
                             <TextField id="notify_url"
                                 label="Notify Url"
-                                onChange={(e) => this.setState({ notify_url: e.target.value })} />
+                                onChange={(e) => this.setState({ notify_url: e.target.value })}
+                                value={this.state.notify_url}
+                                disabled={this.state.default_url}
+                                />
+                            {this.state.default_url ? 
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
+                                        value='default_url'
+                                        color='secondary'
+                                    />
+                                }
+                                label='Default URL'
+                            />
+                            : null }
                         </FormGroup>
 
                         <FormGroup row>
@@ -129,6 +172,16 @@ export class CreateSubscription extends React.Component {
                     <h3>API Usage Example</h3>
                     <FormControlLabel control={
                         <Switch
+                            onChange={(e) => this.setState({ widget_python: e.target.checked })}
+                            value="widget_python"
+                            color="secondary"
+                            checked={this.state.widget_python == true}
+                        />
+                    }
+                        label={this.state.widget_python == true ? "python" : "curl"}
+                    />
+                    <FormControlLabel control={
+                        <Switch
                             onChange={(e) => this.setState({ widget_use_api_key: e.target.checked })}
                             value="widget_use_api_key"
                             color="secondary"
@@ -157,6 +210,7 @@ export class CreateSubscription extends React.Component {
                     </FormControl>
                     : null }
 
+                    {!this.state.widget_python ? 
                     <PrismCode component="pre" className="language-javascript">
 
                         {`
@@ -178,7 +232,29 @@ curl -XPOST \\
   ${baseURL}subscriptions/
 `}
 
-                    </PrismCode>
+                </PrismCode>
+                : <PrismCode component="pre" className="language-python">
+
+                {`
+import requests
+requests.post(
+    '${baseURL}subscriptions/',
+    auth=('${authHeader}', '${apiKey}'), 
+    data= {
+"user": ${this.props.user_id},
+"nickname": "${this.state.nickname}",
+"watched_address": "${this.state.watched_address}",
+"notify_email": "${this.state.notify_email}",
+"notify_url": "${this.state.notify_url}",
+"watch_token_transfers": "${this.state.watch_token_transfers}",
+"summary_notifications": "${this.state.summary_notifications}",
+"include_pricing_data": "${this.state.include_pricing_data}"
+})
+
+`}
+
+</PrismCode>
+                }
                 </Card>
             </Grid>
         </Grid>
@@ -186,6 +262,7 @@ curl -XPOST \\
 
 }
 const mapStateToProps = (state) => ({
+    user: state.auth.user,
     user_id: state.auth.user_id,
     api_keys: state.api_keys.data
 })

@@ -8,6 +8,23 @@ import TimeAgo from 'timeago-react';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 
+const ValueCell = ({tx}) => {
+    if(!tx.is_token)
+        return tx.value / 10E18 + " ETH";
+
+    if(tx.token_info && tx.token_amount && tx.token_info.symbol)
+    {
+        let decimals = tx.token_info.decimal_places ? Math.pow(10, tx.token_info.decimal_places) : 1
+        return <span>
+            {tx.token_amount / decimals + ' '}
+            <a href={`https://etherscan.io/token/${tx.token_info.contract}`} target="_new" style={{color: 'blue'}}>
+                {tx.token_info.symbol}
+            </a>
+        </span>
+    }
+    return tx.token_amount + " UNKNOWN TOKENS"
+}
+
 const TransactionTable = (props) => {
     return <Grid item xs={12}>
         <Card>
@@ -47,11 +64,9 @@ const TransactionTable = (props) => {
                                     transaction.token_to.substr(0, 8) + '...' :
                                     transaction.to_address.substr(0, 8) + '...'
                             }</TableCell>
-                            <TableCell>{
-                                transaction.is_token ?
-                                    transaction.token_amount + " TOKENS" :
-                                    transaction.value / 10E18 + " ETH"
-                            }</TableCell>
+                            <TableCell>
+                                <ValueCell tx={transaction} />
+                            </TableCell>
                              { props.show_pricing_info ?
                                 <TableCell>
                                 { transaction.pricing_info && transaction.pricing_info.fiat > 0.01 ?
