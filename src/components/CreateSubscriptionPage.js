@@ -75,7 +75,7 @@ export class CreateSubscription extends React.Component {
         return <Grid container spacing={24}>
             <Grid item xs={6}>
                 <Card>
-                    <form onSubmit={this.OnSubmit}>
+                    <form onSubmit={(e) => this.OnSubmit(e)}>
                         <FormGroup row>
                             <TextField id="nickname"
                                 label="Nickname"
@@ -159,7 +159,7 @@ export class CreateSubscription extends React.Component {
                         <Button type="submit"
                             variant="contained"
                             color="primary"
-                            onClick={this.OnSubmit}>
+                            onClick={(e) => this.OnSubmit(e)}>
                             <Typography variant="button" gutterBottom className="logintypography">
                                 Create Subscription
                             </Typography>
