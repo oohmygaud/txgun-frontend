@@ -116,6 +116,17 @@ function* unarchiveSubscription(action) {
     }
 }
 
+function* getABI(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.get, 'get_abi?address=' + action.address)
+        yield put({ type: "GET_ABI_SUCCEEDED", data: response.data })
+    }
+    catch(e) {
+        console.log('Error unarchiving subscription', e)
+    }
+}
+
 function* SubscriptionSaga() {
     yield takeLatest("LOAD_SUBSCRIPTIONS", loadSubscriptionList);
     yield takeLatest("LOAD_SUBSCRIPTION_DETAIL", loadSubscriptionDetail);
@@ -126,6 +137,7 @@ function* SubscriptionSaga() {
     yield takeLatest("UNPAUSE_SUBSCRIPTION", unpauseSubscription);
     yield takeLatest("ARCHIVE_SUBSCRIPTION", archiveSubscription);
     yield takeLatest("UNARCHIVE_SUBSCRIPTION", unarchiveSubscription);
+    yield takeLatest("GET_ABI", getABI);
 }
 
 export default SubscriptionSaga;

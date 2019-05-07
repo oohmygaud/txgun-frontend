@@ -3,7 +3,6 @@ export default (state = {}, action) => {
 
         case 'LOAD_SUBSCRIPTIONS_SUCCEEDED':
             return { ...state, data: action.data };
-
         
         case 'CLEAR_SUBSCRIPTION_DETAILS':
             return { ...state, detail: null };
@@ -19,7 +18,9 @@ export default (state = {}, action) => {
 
         case 'EDIT_SUBSCRIPTION_SUCCEEDED':
             return { ...state, edited: action.data };
-            
+        
+        case 'GET_ABI_SUCCEEDED':
+            return { ...state, abi: action.data };
     
         default: return state;
     }

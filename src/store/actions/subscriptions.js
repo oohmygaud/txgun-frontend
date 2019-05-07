@@ -45,3 +45,7 @@ export const unarchiveSubscription = (id) => ({
     id
 });
 
+export const getABI = (address) => ({
+    type: 'GET_ABI',
+    address
+});

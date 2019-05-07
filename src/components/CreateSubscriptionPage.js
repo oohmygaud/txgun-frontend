@@ -1,5 +1,5 @@
 import React from 'react';
-import { createSubscription } from '../store/actions/subscriptions';
+import { createSubscription, getABI } from '../store/actions/subscriptions';
 import { loadAPIKeyList } from '../store/actions/api_keys';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -30,6 +30,7 @@ export class CreateSubscription extends React.Component {
         watch_token_transfers: false,
         summary_notifications: false,
         include_pricing_data: false,
+        specific_contract_calls: false,
         widget_use_api_key: false,
         widget_api_key: null,
         widget_python: null
@@ -55,12 +56,19 @@ export class CreateSubscription extends React.Component {
             this.setState({ notify_url: this.props.user.default_notify_url })
     }
 
+    OnChangeSpecificContractCalls(e) {
+        this.setState({ specific_contract_calls: e.target.checked })
+        if (e.target.checked)
+            this.props.getABI(this.state.watched_address)
+    }
+
     componentWillMount() {
         this.props.loadAPIKeyList()
     }
 
     render() {
-        if(!this.props.api_keys) return "Loading..."
+        if (!this.props.api_keys) return "Loading..."
+        console.log('render', this.props)
 
         const authHeader = this.state.widget_use_api_key ? 'Token' : 'Bearer'
 
@@ -92,7 +100,7 @@ export class CreateSubscription extends React.Component {
                                 onChange={(e) => this.setState({ notify_email: e.target.value })}
                                 value={this.state.notify_email}
                                 disabled={this.state.default_email}
-                                 />
+                            />
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -110,22 +118,22 @@ export class CreateSubscription extends React.Component {
                                 onChange={(e) => this.setState({ notify_url: e.target.value })}
                                 value={this.state.notify_url}
                                 disabled={this.state.default_url}
-                                />
-                            {this.state.default_url ? 
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
-                                        value='default_url'
-                                        color='secondary'
-                                    />
-                                }
-                                label='Default URL'
                             />
-                            : null }
+                            {this.state.default_url ?
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
+                                            value='default_url'
+                                            color='secondary'
+                                        />
+                                    }
+                                    label='Default URL'
+                                />
+                                : null}
                         </FormGroup>
 
-                        <FormGroup row>
+                        <FormGroup column>
                             <FormControlLabel control={
                                 <Switch
                                     onChange={(e) => this.setState({ watch_token_transfers: e.target.checked })}
@@ -135,6 +143,31 @@ export class CreateSubscription extends React.Component {
                             }
                                 label="Watch Token Tranfers"
                             />
+                            <FormControlLabel control={
+                                <Switch
+                                    onChange={(e) => this.OnChangeSpecificContractCalls(e)}
+                                    value="specific_contract_calls"
+                                    color="primary"
+                                />
+                            }
+                                label="Specific Contract Calls"
+                            />
+                            
+                            {this.state.specific_contract_calls && this.props.abi && this.props.abi.abi ?
+
+                                this.props.abi.abi.map(member => (
+                                    member.type == "function" && member.stateMutability != "view" ?
+                                        <FormControlLabel
+                                            key={member.name} 
+                                            control={
+                                                <Checkbox
+                                                    value={member.name}
+                                                />
+                                            }
+                                            label={member.name}
+                                        /> : null
+                                ))
+                                : this.props.abi && this.props.abi.error}
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -156,6 +189,8 @@ export class CreateSubscription extends React.Component {
                                 label="Include Pricing Data"
                             />
                         </FormGroup>
+
+
                         <Button type="submit"
                             variant="contained"
                             color="primary"
@@ -191,29 +226,29 @@ export class CreateSubscription extends React.Component {
                     }
                         label={this.state.widget_use_api_key == true ? "API Key" : "JWT"}
                     />
-                    {this.state.widget_use_api_key ? 
-                    <FormControl>
-                        <InputLabel>
-                            API Key
+                    {this.state.widget_use_api_key ?
+                        <FormControl>
+                            <InputLabel>
+                                API Key
                         </InputLabel>
-                        <Select
-                            value={useApiKey}
-                            onChange={(e) => this.setState({ widget_api_key: e.target.value })}
-                            autoWidth
-                        >
-                        {this.props.api_keys.results.map(api_key=> (
-                            <MenuItem value={api_key.key} key={api_key.id}>
-                                <em>{api_key.nickname}</em>
-                            </MenuItem>  
-                        ))}
-                        </Select>
-                    </FormControl>
-                    : null }
+                            <Select
+                                value={useApiKey}
+                                onChange={(e) => this.setState({ widget_api_key: e.target.value })}
+                                autoWidth
+                            >
+                                {this.props.api_keys.results.map(api_key => (
+                                    <MenuItem value={api_key.key} key={api_key.id}>
+                                        <em>{api_key.nickname}</em>
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        : null}
 
-                    {!this.state.widget_python ? 
-                    <PrismCode component="pre" className="language-javascript">
+                    {!this.state.widget_python ?
+                        <PrismCode component="pre" className="language-javascript">
 
-                        {`
+                            {`
 curl -XPOST \\
   -H "Content-Type: application/json" \\
   -H "Authorization: ${authHeader} ${apiKey}" \\
@@ -224,6 +259,7 @@ curl -XPOST \\
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
     "watch_token_transfers": "${this.state.watch_token_transfers}",
+    "specific_contract_calls": "${this.state.specific_contract_calls}",
     "summary_notifications": "${this.state.summary_notifications}",
     "include_pricing_data": "${this.state.include_pricing_data}"
     
@@ -232,10 +268,10 @@ curl -XPOST \\
   ${baseURL}subscriptions/
 `}
 
-                </PrismCode>
-                : <PrismCode component="pre" className="language-python">
+                        </PrismCode>
+                        : <PrismCode component="pre" className="language-python">
 
-                {`
+                            {`
 import requests
 requests.post(
     '${baseURL}subscriptions/',
@@ -247,14 +283,15 @@ requests.post(
 "notify_email": "${this.state.notify_email}",
 "notify_url": "${this.state.notify_url}",
 "watch_token_transfers": "${this.state.watch_token_transfers}",
+"specific_contract_calls": "${this.state.specific_contract_calls}",
 "summary_notifications": "${this.state.summary_notifications}",
 "include_pricing_data": "${this.state.include_pricing_data}"
 })
 
 `}
 
-</PrismCode>
-                }
+                        </PrismCode>
+                    }
                 </Card>
             </Grid>
         </Grid>
@@ -264,11 +301,15 @@ requests.post(
 const mapStateToProps = (state) => ({
     user: state.auth.user,
     user_id: state.auth.user_id,
-    api_keys: state.api_keys.data
+    api_keys: state.api_keys.data,
+    abi: state.subscriptions.abi
+
 })
 const mapDispatchToProps = (dispatch) => ({
     createSubscription: (data) => dispatch(createSubscription(data)),
-    loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page))
+    loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page)),
+    getABI: (address) => dispatch(getABI(address))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateSubscription);
