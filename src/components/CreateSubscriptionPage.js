@@ -33,15 +33,18 @@ export class CreateSubscription extends React.Component {
         specific_contract_calls: false,
         widget_use_api_key: false,
         widget_api_key: null,
-        widget_python: null
+        widget_python: null,
+        abi_methods: {}
     }
 
     OnSubmit(e) {
         e.preventDefault();
         const form_data = { ...this.state, user: this.props.user_id };
-
+        const method_names = Object.keys(this.state.abi_methods)
+        form_data.abi_methods = method_names.filter(name => this.state.abi_methods[name]).join(',')
         console.log('Creating', form_data)
         this.props.createSubscription(form_data);
+
     };
 
     OnChangeDefaultEmailSwitch(e) {
@@ -62,13 +65,20 @@ export class CreateSubscription extends React.Component {
             this.props.getABI(this.state.watched_address)
     }
 
+    OnChangeABIMethod(e) {
+        this.setState({ abi_methods: {
+            ...this.state.abi_methods,
+            [e.target.value]: e.target.checked
+        }})
+    }
+
     componentWillMount() {
         this.props.loadAPIKeyList()
     }
 
     render() {
         if (!this.props.api_keys) return "Loading..."
-        console.log('render', this.props)
+        console.log('render', this.state)
 
         const authHeader = this.state.widget_use_api_key ? 'Token' : 'Bearer'
 
@@ -133,7 +143,7 @@ export class CreateSubscription extends React.Component {
                                 : null}
                         </FormGroup>
 
-                        <FormGroup column>
+                        <FormGroup column="true">
                             <FormControlLabel control={
                                 <Switch
                                     onChange={(e) => this.setState({ watch_token_transfers: e.target.checked })}
@@ -156,11 +166,13 @@ export class CreateSubscription extends React.Component {
                             {this.state.specific_contract_calls && this.props.abi && this.props.abi.abi ?
 
                                 this.props.abi.abi.map(member => (
-                                    member.type == "function" && member.stateMutability != "view" ?
+                                    member.type == "function" && member.stateMutability != "view" && !member.constant ?
                                         <FormControlLabel
                                             key={member.name} 
                                             control={
                                                 <Checkbox
+                                                    onChange={(e) => this.OnChangeABIMethod(e)}
+                                                    checked={this.state.abi_methods[member.name] || false}
                                                     value={member.name}
                                                 />
                                             }
