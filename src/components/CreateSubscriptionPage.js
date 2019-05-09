@@ -1,6 +1,7 @@
 import React from 'react';
 import { createSubscription, getABI } from '../store/actions/subscriptions';
 import { loadAPIKeyList } from '../store/actions/api_keys';
+import { loadNetworkList } from '../store/actions/networks';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -34,7 +35,8 @@ export class CreateSubscription extends React.Component {
         widget_use_api_key: false,
         widget_api_key: null,
         widget_python: null,
-        abi_methods: {}
+        abi_methods: {},
+        network: null
     }
 
     OnSubmit(e) {
@@ -66,19 +68,27 @@ export class CreateSubscription extends React.Component {
     }
 
     OnChangeABIMethod(e) {
-        this.setState({ abi_methods: {
-            ...this.state.abi_methods,
-            [e.target.value]: e.target.checked
-        }})
+        this.setState({
+            abi_methods: {
+                ...this.state.abi_methods,
+                [e.target.value]: e.target.checked
+            }
+        })
     }
 
     componentWillMount() {
         this.props.loadAPIKeyList()
+        this.props.loadNetworkList()
     }
 
     render() {
-        if (!this.props.api_keys) return "Loading..."
-        console.log('render', this.state)
+        if (!this.props.api_keys || !this.props.networks) return "Loading..."
+        
+        if (this.props.networks.results && !this.state.network)
+        {
+            setTimeout(() => this.setState({ network: this.props.networks.results[0].id }), 100)
+            return "Loading...";
+        }
 
         const authHeader = this.state.widget_use_api_key ? 'Token' : 'Bearer'
 
@@ -99,6 +109,28 @@ export class CreateSubscription extends React.Component {
                                 label="Nickname"
                                 onChange={(e) => this.setState({ nickname: e.target.value })} />
                         </FormGroup>
+
+                    {this.props.networks.results ?
+                        <FormControl>
+                            <InputLabel>
+                                Network
+                            </InputLabel>
+
+                            <Select
+                                value={this.state.network}
+                                onChange={(e) => this.setState({ network: e.target.value })}
+                                autoWidth
+                            >
+                                {this.props.networks.results.map(network => (
+                                    <MenuItem value={network.id} key={network.id}>
+                                        <em>{network.nickname}</em>
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                    : null }
+
                         <FormGroup row>
                             <TextField id="watched_address"
                                 label="Watched Address"
@@ -162,13 +194,13 @@ export class CreateSubscription extends React.Component {
                             }
                                 label="Specific Contract Calls"
                             />
-                            
+
                             {this.state.specific_contract_calls && this.props.abi && this.props.abi.abi ?
 
                                 this.props.abi.abi.map(member => (
                                     member.type == "function" && member.stateMutability != "view" && !member.constant ?
                                         <FormControlLabel
-                                            key={member.name} 
+                                            key={member.name}
                                             control={
                                                 <Checkbox
                                                     onChange={(e) => this.OnChangeABIMethod(e)}
@@ -314,13 +346,15 @@ const mapStateToProps = (state) => ({
     user: state.auth.user,
     user_id: state.auth.user_id,
     api_keys: state.api_keys.data,
-    abi: state.subscriptions.abi
+    abi: state.subscriptions.abi,
+    networks: state.networks.data
 
 })
 const mapDispatchToProps = (dispatch) => ({
     createSubscription: (data) => dispatch(createSubscription(data)),
     loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page)),
-    getABI: (address) => dispatch(getABI(address))
+    getABI: (address) => dispatch(getABI(address)),
+    loadNetworkList: (options) => dispatch(loadNetworkList(options))
 
 });
 
