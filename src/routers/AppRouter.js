@@ -10,7 +10,7 @@ import LoginPage from '../components/LoginPage';
 import SubscriptionPage from '../components/SubscriptionPage';
 import SubscriptionDetailPage from '../components/SubscriptionDetailPage';
 import CreateSubscription from '../components/CreateSubscriptionPage';
-import EditSubscription from '../components/EditSubscriptionPage';
+
 import { ConnectedRouter } from 'connected-react-router'
 import APIKeyPage from '../components/APIKeyPage';
 import APIKeyDetail from '../components/APIKeyDetail';
@@ -28,7 +28,7 @@ const AppRouter = ({history}) => (
         <PublicRoute path="/" component={LandingPage} exact={true} />
         <PublicRoute path="/registration" component={Registration} exact={true} />
          <PrivateRoute path="/home" component={HomePage} />
-         <PrivateRoute path="/subscriptions/:id/edit" component={EditSubscription} />
+         <PrivateRoute path="/subscriptions/:id/edit" component={CreateSubscription} />
          <PrivateRoute path="/subscriptions/create" component={CreateSubscription} />
          <PrivateRoute path="/subscriptions/:id" component={SubscriptionDetailPage} />
          <PrivateRoute path="/subscriptions" component={SubscriptionPage} />

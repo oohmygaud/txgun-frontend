@@ -1,5 +1,6 @@
 import React from 'react';
-import { createSubscription, getABI } from '../store/actions/subscriptions';
+import { editSubscription, createSubscription, getABI } from '../store/actions/subscriptions';
+import { loadSubscriptionDetail, archiveSubscription, unarchiveSubscription } from '../store/actions/subscriptions';
 import { loadAPIKeyList } from '../store/actions/api_keys';
 import { loadNetworkList } from '../store/actions/networks';
 import TextField from '@material-ui/core/TextField';
@@ -21,6 +22,8 @@ import PrismCode from 'react-prism';
 import { baseURL } from '../store/api';
 import Checkbox from '@material-ui/core/Checkbox';
 require('prismjs/components/prism-python')
+import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 export class CreateSubscription extends React.Component {
     state = {
@@ -42,11 +45,17 @@ export class CreateSubscription extends React.Component {
     OnSubmit(e) {
         e.preventDefault();
         const form_data = { ...this.state, user: this.props.user_id };
-        const method_names = Object.keys(this.state.abi_methods)
+        const method_names = Object.keys(this.state.abi_methods || {})
         form_data.abi_methods = method_names.filter(name => this.state.abi_methods[name]).join(',')
-        console.log('Creating', form_data)
-        this.props.createSubscription(form_data);
-
+        
+        if (this.props.match.params.id)
+        {
+            console.log('Editing', form_data)
+            this.props.editSubscription(this.props.match.params.id, form_data);
+        } else {
+            console.log('Creating', form_data)
+            this.props.createSubscription(form_data);
+        }
     };
 
     OnChangeDefaultEmailSwitch(e) {
@@ -76,19 +85,32 @@ export class CreateSubscription extends React.Component {
         })
     }
 
-    componentWillMount() {
+    static getDerivedStateFromProps(nextProps, state) {
+        if(nextProps.subscription && nextProps.subscription.id != state.id 
+            && nextProps.subscription.id == nextProps.match.params.id)
+            return {
+                ...nextProps.subscription
+            };
+    }
+
+    componentDidMount() {
         this.props.loadAPIKeyList()
         this.props.loadNetworkList()
+        this.props.clearDetails()
+        if (this.props.match.params.id)
+            this.props.loadSubscriptionDetail(this.props.match.params.id)
     }
 
     render() {
-        if (!this.props.api_keys || !this.props.networks) return "Loading..."
-        
-        if (this.props.networks.results && !this.state.network)
-        {
+        if (!this.props.api_keys || !this.props.networks || !this.props.user_id) return "Loading..."
+
+        if (this.props.networks.results && !this.state.network) {
             setTimeout(() => this.setState({ network: this.props.networks.results[0].id }), 100)
             return "Loading...";
         }
+
+        if (!this.props.subscription && this.props.match.params.id)
+            return <Typography>Loading...</Typography>
 
         const authHeader = this.state.widget_use_api_key ? 'Token' : 'Bearer'
 
@@ -99,45 +121,53 @@ export class CreateSubscription extends React.Component {
         const useApiKey = this.state.widget_api_key || defaultApiKey;
 
         const apiKey = this.state.widget_use_api_key ? useApiKey : localStorage.getItem('authToken');
+        
+        const subscription = this.props.subscription || {}
 
+        console.log("rendering", this.state)
         return <Grid container spacing={24}>
             <Grid item xs={6}>
                 <Card>
                     <form onSubmit={(e) => this.OnSubmit(e)}>
                         <FormGroup row>
-                            <TextField id="nickname"
+                            <TextField
+                                id="nickname"
+                                defaultValue={subscription.nickname}
                                 label="Nickname"
                                 onChange={(e) => this.setState({ nickname: e.target.value })} />
                         </FormGroup>
 
-                    {this.props.networks.results ?
-                        <FormControl>
-                            <InputLabel>
-                                Network
+                        {this.props.networks.results ?
+                            <FormControl>
+                                <InputLabel>
+                                    Network
                             </InputLabel>
 
-                            <Select
-                                value={this.state.network}
-                                onChange={(e) => this.setState({ network: e.target.value })}
-                                autoWidth
-                            >
-                                {this.props.networks.results.map(network => (
-                                    <MenuItem value={network.id} key={network.id}>
-                                        <em>{network.nickname}</em>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                <Select
+                                    value={this.state.network}
+                                    onChange={(e) => this.setState({ network: e.target.value })}
+                                    autoWidth
+                                >
+                                    {this.props.networks.results.map(network => (
+                                        <MenuItem value={network.id} key={network.id}>
+                                            <em>{network.nickname}</em>
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                    : null }
+                            : null}
 
                         <FormGroup row>
-                            <TextField id="watched_address"
+                            <TextField
+                                id="watched_address"
+                                defaultValue={subscription.watched_address}
                                 label="Watched Address"
                                 onChange={(e) => this.setState({ watched_address: e.target.value })} />
                         </FormGroup>
                         <FormGroup row>
-                            <TextField id="notify_email"
+                            <TextField
+                                id="notify_email"
                                 label="Notify Email"
                                 onChange={(e) => this.setState({ notify_email: e.target.value })}
                                 value={this.state.notify_email}
@@ -181,6 +211,7 @@ export class CreateSubscription extends React.Component {
                                     onChange={(e) => this.setState({ watch_token_transfers: e.target.checked })}
                                     value="watch_token_transfers"
                                     color="primary"
+                                    checked={this.state.watch_token_transfers}
                                 />
                             }
                                 label="Watch Token Tranfers"
@@ -190,6 +221,7 @@ export class CreateSubscription extends React.Component {
                                     onChange={(e) => this.OnChangeSpecificContractCalls(e)}
                                     value="specific_contract_calls"
                                     color="primary"
+                                    checked={this.state.specific_contract_calls}
                                 />
                             }
                                 label="Specific Contract Calls"
@@ -218,6 +250,7 @@ export class CreateSubscription extends React.Component {
                                         onChange={(e) => this.setState({ summary_notifications: e.target.checked })}
                                         value="summary_notifications"
                                         color="primary"
+                                        checked={this.state.summary_notifications}
                                     />
                                 }
                                 label="Summary Notifications"
@@ -228,21 +261,22 @@ export class CreateSubscription extends React.Component {
                                         onChange={(e) => this.setState({ include_pricing_data: e.target.checked })}
                                         value="include_pricing_data"
                                         color="primary"
+                                        checked={this.state.include_pricing_data}
                                     />
                                 }
                                 label="Include Pricing Data"
                             />
                         </FormGroup>
 
-
                         <Button type="submit"
                             variant="contained"
                             color="primary"
                             onClick={(e) => this.OnSubmit(e)}>
                             <Typography variant="button" gutterBottom className="logintypography">
-                                Create Subscription
+                               {!this.props.subscription ? "Create Subscription" : "Edit Subscription"} 
                             </Typography>
                         </Button>
+                        
                     </form>
                 </Card>
             </Grid>
@@ -288,17 +322,28 @@ export class CreateSubscription extends React.Component {
                             </Select>
                         </FormControl>
                         : null}
-
+                    { this.props.subscription ?
+                        !this.props.subscription.archived_at ?
+                            <Button color="secondary" onClick={(e) => this.props.archive(this.props.subscription.id)} >
+                                <ArchiveIcon />Archive
+                            </Button>
+                            :
+                            <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
+                                <UnarchiveIcon />Unarchive
+                            </Button>
+                        
+                    : null }
                     {!this.state.widget_python ?
                         <PrismCode component="pre" className="language-javascript">
 
                             {`
-curl -XPOST \\
+curl -X${this.props.subscription ? "PUT" : "POST"} \\
   -H "Content-Type: application/json" \\
   -H "Authorization: ${authHeader} ${apiKey}" \\
   -d '{
     "user": ${this.props.user_id},
     "nickname": "${this.state.nickname}",
+    "network": "${this.state.network}",
     "watched_address": "${this.state.watched_address}",
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
@@ -309,7 +354,7 @@ curl -XPOST \\
     
     
   }' \\
-  ${baseURL}subscriptions/
+  ${baseURL}subscriptions/${this.props.subscription ? this.props.subscription.id + "/" : null}
 `}
 
                         </PrismCode>
@@ -317,12 +362,13 @@ curl -XPOST \\
 
                             {`
 import requests
-requests.post(
-    '${baseURL}subscriptions/',
+requests.${this.props.subscription ? "put" : "post"}(
+    '${baseURL}subscriptions/${this.props.subscription ? this.props.subscription.id + "/" : null}',
     auth=('${authHeader}', '${apiKey}'), 
     data= {
 "user": ${this.props.user_id},
 "nickname": "${this.state.nickname}",
+"network": "${this.state.network}",
 "watched_address": "${this.state.watched_address}",
 "notify_email": "${this.state.notify_email}",
 "notify_url": "${this.state.notify_url}",
@@ -347,14 +393,20 @@ const mapStateToProps = (state) => ({
     user_id: state.auth.user_id,
     api_keys: state.api_keys.data,
     abi: state.subscriptions.abi,
-    networks: state.networks.data
+    networks: state.networks.data,
+    subscription: state.subscriptions.detail
 
 })
 const mapDispatchToProps = (dispatch) => ({
     createSubscription: (data) => dispatch(createSubscription(data)),
     loadAPIKeyList: (page) => dispatch(loadAPIKeyList(page)),
     getABI: (address) => dispatch(getABI(address)),
-    loadNetworkList: (options) => dispatch(loadNetworkList(options))
+    loadNetworkList: (options) => dispatch(loadNetworkList(options)),
+    loadSubscriptionDetail: (id) => dispatch(loadSubscriptionDetail(id)),
+    clearDetails: () => dispatch({ type: 'CLEAR_SUBSCRIPTION_DETAILS' }),
+    archive: (id) => dispatch(archiveSubscription(id)),
+    unarchive: (id) => dispatch(unarchiveSubscription(id)),
+    editSubscription: (id, data) => dispatch(editSubscription(id, data)),
 
 });
 
