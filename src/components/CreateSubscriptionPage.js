@@ -32,15 +32,17 @@ export class CreateSubscription extends React.Component {
         notify_email: "",
         notify_url: "",
         watch_token_transfers: false,
-        daily_notifications: false,
-        monthly_notifications: false,
+        daily_emails: false,
+        monthly_emails: false,
         include_pricing_data: false,
         specific_contract_calls: false,
         widget_use_api_key: false,
         widget_api_key: null,
         widget_python: null,
         abi_methods: {},
-        network: null
+        network: null,
+        realtime_emails: true,
+        realtime_webhooks: false
     }
 
     OnSubmit(e) {
@@ -133,29 +135,59 @@ export class CreateSubscription extends React.Component {
 
     renderNotifyEmailField() {
         return <FormGroup row>
-            <TextField
-                id="notify_email"
-                label="Notify Email"
-                onChange={(e) => this.setState({ notify_email: e.target.value })}
-                value={this.state.notify_email}
-                disabled={this.state.default_email}
-            />
             <FormControlLabel
                 control={
-                    <Checkbox
-                        onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
-                        value='default_email'
-                        color='secondary'
+                    <Switch
+                        onChange={(e) => this.setState({ realtime_emails: e.target.checked })}
+                        value="realtime_emails"
+                        color="primary"
+                        checked={this.state.realtime_emails}
                     />
                 }
-                label='Default Email'
+                label="Real-time Email Notifications"
             />
+            {this.state.realtime_emails ?
+                <div>
+                    <TextField
+                        id="notify_email"
+                        label="Notify Email"
+                        onChange={(e) => this.setState({ notify_email: e.target.value })}
+                        value={this.state.notify_email}
+                        disabled={this.state.default_email}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
+                                value='default_email'
+                                color='secondary'
+                            />
+                        }
+                        label='Default Email'
+                    />
+                </div>
+                : null}
+
         </FormGroup>
     }
 
     renderNotifyUrlField() {
         return <FormGroup row>
-            <TextField id="notify_url"
+            <FormControlLabel
+                control={
+                    <Switch
+                        onChange={(e) => this.setState({ realtime_webhooks: e.target.checked })}
+                        value="realtime_webhooks"
+                        color="primary"
+                        checked={this.state.realtime_webhooks}
+                    />
+                }
+                label="Real-time Webhook Notifications"
+            />
+
+            {this.state.realtime_webhooks ? 
+                <div>
+                    <TextField id="notify_url"
                 label="Notify Url"
                 onChange={(e) => this.setState({ notify_url: e.target.value })}
                 value={this.state.notify_url}
@@ -173,6 +205,9 @@ export class CreateSubscription extends React.Component {
                     label='Default URL'
                 />
                 : null}
+                </div>
+            : null}
+            
         </FormGroup>
     }
 
@@ -222,13 +257,13 @@ export class CreateSubscription extends React.Component {
         return <FormControlLabel
             control={
                 <Switch
-                    onChange={(e) => this.setState({ daily_notifications: e.target.checked })}
-                    value="daily_notifications"
+                    onChange={(e) => this.setState({ daily_emails: e.target.checked })}
+                    value="daily_emails"
                     color="primary"
-                    checked={this.state.daily_notifications}
+                    checked={this.state.daily_emails}
                 />
             }
-            label="Daily Notifications"
+            label="Daily Email Summaries"
         />
     }
 
@@ -236,15 +271,17 @@ export class CreateSubscription extends React.Component {
         return <FormControlLabel
             control={
                 <Switch
-                    onChange={(e) => this.setState({ monthly_notifications: e.target.checked })}
-                    value="monthly_notifications"
+                    onChange={(e) => this.setState({ monthly_emails: e.target.checked })}
+                    value="monthly_emails"
                     color="primary"
-                    checked={this.state.monthly_notifications}
+                    checked={this.state.monthly_emails}
                 />
             }
-            label="Monthly Notifications"
+            label="Monthly Email Summaries"
         />
     }
+
+
 
     static getDerivedStateFromProps(nextProps, state) {
         if (nextProps.subscription && nextProps.subscription.id != state.id
@@ -293,17 +330,13 @@ export class CreateSubscription extends React.Component {
 
                     <Card style={{ padding: "1em" }}>
 
-                        <h3>Real-time Notifications</h3>
+                        <h3>Subscription Info</h3>
 
                         {this.renderNicknameField(subscription)}
 
                         {this.renderNetworkField()}
 
                         {this.renderWatchedAddressField(subscription)}
-
-                        {this.renderNotifyEmailField()}
-
-                        {this.renderNotifyUrlField()}
 
                     </Card>
 
@@ -343,9 +376,13 @@ export class CreateSubscription extends React.Component {
 
                     <Card style={{ padding: "1em", marginTop: "1em" }}>
 
-                        <h3>Summaries</h3>
+                        <h3>Notifications</h3>
 
                         <FormGroup column="true">
+
+                            {this.renderNotifyEmailField()}
+
+                            {this.renderNotifyUrlField()}
 
                             {this.renderDailyNotifications()}
 
@@ -431,7 +468,7 @@ export class CreateSubscription extends React.Component {
                             </Button>
 
                         : null}
-                        
+
                     {!this.state.widget_python ?
                         <PrismCode component="pre" className="language-javascript">
 
@@ -444,13 +481,13 @@ curl -X${this.props.subscription ? "PUT" : "POST"} \\
     "nickname": "${this.state.nickname}",
     "network": "${this.state.network}",
     "watched_address": "${this.state.watched_address}",
-    "notify_email": "${this.state.notify_email}",
-    "notify_url": "${this.state.notify_url}",
     "watch_token_transfers": "${this.state.watch_token_transfers}",
     "include_pricing_data": "${this.state.include_pricing_data}",
     "specific_contract_calls": "${this.state.specific_contract_calls}",
-    "daily_notifications": "${this.state.daily_notifications}",
-    "monthly_notifications": "${this.state.monthly_notifications}"
+    "notify_email": "${this.state.notify_email}",
+    "notify_url": "${this.state.notify_url}",
+    "daily_emails": "${this.state.daily_emails}",
+    "monthly_emails": "${this.state.monthly_emails}"
     
     
     
@@ -471,13 +508,13 @@ requests.${this.props.subscription ? "put" : "post"}(
 "nickname": "${this.state.nickname}",
 "network": "${this.state.network}",
 "watched_address": "${this.state.watched_address}",
-"notify_email": "${this.state.notify_email}",
-"notify_url": "${this.state.notify_url}",
 "watch_token_transfers": "${this.state.watch_token_transfers}",
 "include_pricing_data": "${this.state.include_pricing_data}",
 "specific_contract_calls": "${this.state.specific_contract_calls}",
-"daily_notifications": "${this.state.daily_notifications}",
-"monthly_notifications": "${this.state.monthly_notifications}"
+"notify_email": "${this.state.notify_email}",
+"notify_url": "${this.state.notify_url}",
+"daily_emails": "${this.state.daily_emails}",
+"monthly_emails": "${this.state.monthly_emails}"
 
 })
 
