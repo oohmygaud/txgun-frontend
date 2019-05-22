@@ -32,7 +32,8 @@ export class CreateSubscription extends React.Component {
         notify_email: "",
         notify_url: "",
         watch_token_transfers: false,
-        summary_notifications: false,
+        daily_notifications: false,
+        monthly_notifications: false,
         include_pricing_data: false,
         specific_contract_calls: false,
         widget_use_api_key: false,
@@ -47,9 +48,8 @@ export class CreateSubscription extends React.Component {
         const form_data = { ...this.state, user: this.props.user_id };
         const method_names = Object.keys(this.state.abi_methods || {})
         form_data.abi_methods = method_names.filter(name => this.state.abi_methods[name]).join(',')
-        
-        if (this.props.match.params.id)
-        {
+
+        if (this.props.match.params.id) {
             console.log('Editing', form_data)
             this.props.editSubscription(this.props.match.params.id, form_data);
         } else {
@@ -85,8 +85,169 @@ export class CreateSubscription extends React.Component {
         })
     }
 
+    renderNicknameField(subscription) {
+        return <FormGroup row>
+            <TextField
+                id="nickname"
+                defaultValue={subscription.nickname}
+                label="Nickname"
+                onChange={(e) => this.setState({ nickname: e.target.value })}
+            />
+        </FormGroup>
+    }
+
+    renderNetworkField() {
+        if (this.props.networks.results)
+            return <FormControl>
+                <InputLabel>
+                    Network
+                </InputLabel>
+
+                <Select
+                    value={this.state.network}
+                    onChange={(e) => this.setState({ network: e.target.value })}
+                    autoWidth
+                >
+                    {this.props.networks.results.map(network => (
+                        <MenuItem value={network.id} key={network.id}>
+                            <em>{network.nickname}</em>
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        else
+            return null
+
+    }
+
+    renderWatchedAddressField(subscription) {
+        return <FormGroup row>
+            <TextField
+                id="watched_address"
+                defaultValue={subscription.watched_address}
+                label="Watched Address"
+                onChange={(e) => this.setState({ watched_address: e.target.value })}
+            />
+        </FormGroup>
+    }
+
+    renderNotifyEmailField() {
+        return <FormGroup row>
+            <TextField
+                id="notify_email"
+                label="Notify Email"
+                onChange={(e) => this.setState({ notify_email: e.target.value })}
+                value={this.state.notify_email}
+                disabled={this.state.default_email}
+            />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
+                        value='default_email'
+                        color='secondary'
+                    />
+                }
+                label='Default Email'
+            />
+        </FormGroup>
+    }
+
+    renderNotifyUrlField() {
+        return <FormGroup row>
+            <TextField id="notify_url"
+                label="Notify Url"
+                onChange={(e) => this.setState({ notify_url: e.target.value })}
+                value={this.state.notify_url}
+                disabled={this.state.default_url}
+            />
+            {this.state.default_url ?
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
+                            value='default_url'
+                            color='secondary'
+                        />
+                    }
+                    label='Default URL'
+                />
+                : null}
+        </FormGroup>
+    }
+
+    renderWatchTokenTransfers() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ watch_token_transfers: e.target.checked })}
+                    value="watch_token_transfers"
+                    color="primary"
+                    checked={this.state.watch_token_transfers}
+                />
+            }
+            label="Watch Token Tranfers"
+        />
+    }
+
+    renderIncludePricingData() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ include_pricing_data: e.target.checked })}
+                    value="include_pricing_data"
+                    color="primary"
+                    checked={this.state.include_pricing_data}
+                />
+            }
+            label="Include Pricing Data"
+        />
+    }
+
+    renderSpecificContractCalls() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.OnChangeSpecificContractCalls(e)}
+                    value="specific_contract_calls"
+                    color="primary"
+                    checked={this.state.specific_contract_calls}
+                />
+            }
+            label="Specific Contract Calls"
+        />
+    }
+
+    renderDailyNotifications() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ daily_notifications: e.target.checked })}
+                    value="daily_notifications"
+                    color="primary"
+                    checked={this.state.daily_notifications}
+                />
+            }
+            label="Daily Notifications"
+        />
+    }
+
+    renderMonthlyNotifications() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ monthly_notifications: e.target.checked })}
+                    value="monthly_notifications"
+                    color="primary"
+                    checked={this.state.monthly_notifications}
+                />
+            }
+            label="Monthly Notifications"
+        />
+    }
+
     static getDerivedStateFromProps(nextProps, state) {
-        if(nextProps.subscription && nextProps.subscription.id != state.id 
+        if (nextProps.subscription && nextProps.subscription.id != state.id
             && nextProps.subscription.id == nextProps.match.params.id)
             return {
                 ...nextProps.subscription
@@ -121,111 +282,42 @@ export class CreateSubscription extends React.Component {
         const useApiKey = this.state.widget_api_key || defaultApiKey;
 
         const apiKey = this.state.widget_use_api_key ? useApiKey : localStorage.getItem('authToken');
-        
+
         const subscription = this.props.subscription || {}
 
         console.log("rendering", this.state)
         return <Grid container spacing={24}>
+
             <Grid item xs={6}>
-                <Card>
-                    <form onSubmit={(e) => this.OnSubmit(e)}>
-                        <FormGroup row>
-                            <TextField
-                                id="nickname"
-                                defaultValue={subscription.nickname}
-                                label="Nickname"
-                                onChange={(e) => this.setState({ nickname: e.target.value })} />
-                        </FormGroup>
+                <form onSubmit={(e) => this.OnSubmit(e)}>
 
-                        {this.props.networks.results ?
-                            <FormControl>
-                                <InputLabel>
-                                    Network
-                            </InputLabel>
+                    <Card style={{ padding: "1em" }}>
 
-                                <Select
-                                    value={this.state.network}
-                                    onChange={(e) => this.setState({ network: e.target.value })}
-                                    autoWidth
-                                >
-                                    {this.props.networks.results.map(network => (
-                                        <MenuItem value={network.id} key={network.id}>
-                                            <em>{network.nickname}</em>
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <h3>Real-time Notifications</h3>
 
-                            : null}
+                        {this.renderNicknameField(subscription)}
 
-                        <FormGroup row>
-                            <TextField
-                                id="watched_address"
-                                defaultValue={subscription.watched_address}
-                                label="Watched Address"
-                                onChange={(e) => this.setState({ watched_address: e.target.value })} />
-                        </FormGroup>
-                        <FormGroup row>
-                            <TextField
-                                id="notify_email"
-                                label="Notify Email"
-                                onChange={(e) => this.setState({ notify_email: e.target.value })}
-                                value={this.state.notify_email}
-                                disabled={this.state.default_email}
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
-                                        value='default_email'
-                                        color='secondary'
-                                    />
-                                }
-                                label='Default Email'
-                            />
-                        </FormGroup>
-                        <FormGroup row>
-                            <TextField id="notify_url"
-                                label="Notify Url"
-                                onChange={(e) => this.setState({ notify_url: e.target.value })}
-                                value={this.state.notify_url}
-                                disabled={this.state.default_url}
-                            />
-                            {this.state.default_url ?
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
-                                            value='default_url'
-                                            color='secondary'
-                                        />
-                                    }
-                                    label='Default URL'
-                                />
-                                : null}
-                        </FormGroup>
+                        {this.renderNetworkField()}
+
+                        {this.renderWatchedAddressField(subscription)}
+
+                        {this.renderNotifyEmailField()}
+
+                        {this.renderNotifyUrlField()}
+
+                    </Card>
+
+                    <Card style={{ padding: "1em", marginTop: "1em" }}>
+
+                        <h3>Filtering</h3>
 
                         <FormGroup column="true">
-                            <FormControlLabel control={
-                                <Switch
-                                    onChange={(e) => this.setState({ watch_token_transfers: e.target.checked })}
-                                    value="watch_token_transfers"
-                                    color="primary"
-                                    checked={this.state.watch_token_transfers}
-                                />
-                            }
-                                label="Watch Token Tranfers"
-                            />
-                            <FormControlLabel control={
-                                <Switch
-                                    onChange={(e) => this.OnChangeSpecificContractCalls(e)}
-                                    value="specific_contract_calls"
-                                    color="primary"
-                                    checked={this.state.specific_contract_calls}
-                                />
-                            }
-                                label="Specific Contract Calls"
-                            />
+
+                            {this.renderWatchTokenTransfers()}
+
+                            {this.renderIncludePricingData()}
+
+                            {this.renderSpecificContractCalls()}
 
                             {this.state.specific_contract_calls && this.props.abi && this.props.abi.abi ?
 
@@ -244,45 +336,48 @@ export class CreateSubscription extends React.Component {
                                         /> : null
                                 ))
                                 : this.props.abi && this.props.abi.error}
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        onChange={(e) => this.setState({ summary_notifications: e.target.checked })}
-                                        value="summary_notifications"
-                                        color="primary"
-                                        checked={this.state.summary_notifications}
-                                    />
-                                }
-                                label="Summary Notifications"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        onChange={(e) => this.setState({ include_pricing_data: e.target.checked })}
-                                        value="include_pricing_data"
-                                        color="primary"
-                                        checked={this.state.include_pricing_data}
-                                    />
-                                }
-                                label="Include Pricing Data"
-                            />
+
                         </FormGroup>
 
-                        <Button type="submit"
-                            variant="contained"
-                            color="primary"
-                            onClick={(e) => this.OnSubmit(e)}>
-                            <Typography variant="button" gutterBottom className="logintypography">
-                               {!this.props.subscription ? "Create Subscription" : "Edit Subscription"} 
-                            </Typography>
-                        </Button>
-                        
-                    </form>
-                </Card>
+                    </Card>
+
+                    <Card style={{ padding: "1em", marginTop: "1em" }}>
+
+                        <h3>Summaries</h3>
+
+                        <FormGroup column="true">
+
+                            {this.renderDailyNotifications()}
+
+                            {this.renderMonthlyNotifications()}
+
+                        </FormGroup>
+
+                    </Card>
+
+
+                    <Button
+                        style={{ marginTop: "1em" }}
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => this.OnSubmit(e)}>
+                        <Typography variant="button" gutterBottom className="logintypography">
+                            {!this.props.subscription ? "Create Subscription" : "Edit Subscription"}
+                        </Typography>
+                    </Button>
+
+                </form>
+
             </Grid>
+
+
             <Grid item xs={6}>
+
                 <Card style={{ padding: "1em" }}>
+
                     <h3>API Usage Example</h3>
+
                     <FormControlLabel control={
                         <Switch
                             onChange={(e) => this.setState({ widget_python: e.target.checked })}
@@ -293,6 +388,7 @@ export class CreateSubscription extends React.Component {
                     }
                         label={this.state.widget_python == true ? "python" : "curl"}
                     />
+
                     <FormControlLabel control={
                         <Switch
                             onChange={(e) => this.setState({ widget_use_api_key: e.target.checked })}
@@ -304,6 +400,7 @@ export class CreateSubscription extends React.Component {
                     }
                         label={this.state.widget_use_api_key == true ? "API Key" : "JWT"}
                     />
+
                     {this.state.widget_use_api_key ?
                         <FormControl>
                             <InputLabel>
@@ -322,7 +419,8 @@ export class CreateSubscription extends React.Component {
                             </Select>
                         </FormControl>
                         : null}
-                    { this.props.subscription ?
+
+                    {this.props.subscription ?
                         !this.props.subscription.archived_at ?
                             <Button color="secondary" onClick={(e) => this.props.archive(this.props.subscription.id)} >
                                 <ArchiveIcon />Archive
@@ -331,8 +429,9 @@ export class CreateSubscription extends React.Component {
                             <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
                                 <UnarchiveIcon />Unarchive
                             </Button>
+
+                        : null}
                         
-                    : null }
                     {!this.state.widget_python ?
                         <PrismCode component="pre" className="language-javascript">
 
@@ -348,9 +447,11 @@ curl -X${this.props.subscription ? "PUT" : "POST"} \\
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
     "watch_token_transfers": "${this.state.watch_token_transfers}",
+    "include_pricing_data": "${this.state.include_pricing_data}",
     "specific_contract_calls": "${this.state.specific_contract_calls}",
-    "summary_notifications": "${this.state.summary_notifications}",
-    "include_pricing_data": "${this.state.include_pricing_data}"
+    "daily_notifications": "${this.state.daily_notifications}",
+    "monthly_notifications": "${this.state.monthly_notifications}"
+    
     
     
   }' \\
@@ -373,9 +474,11 @@ requests.${this.props.subscription ? "put" : "post"}(
 "notify_email": "${this.state.notify_email}",
 "notify_url": "${this.state.notify_url}",
 "watch_token_transfers": "${this.state.watch_token_transfers}",
+"include_pricing_data": "${this.state.include_pricing_data}",
 "specific_contract_calls": "${this.state.specific_contract_calls}",
-"summary_notifications": "${this.state.summary_notifications}",
-"include_pricing_data": "${this.state.include_pricing_data}"
+"daily_notifications": "${this.state.daily_notifications}",
+"monthly_notifications": "${this.state.monthly_notifications}"
+
 })
 
 `}
@@ -384,7 +487,7 @@ requests.${this.props.subscription ? "put" : "post"}(
                     }
                 </Card>
             </Grid>
-        </Grid>
+        </Grid >
     }
 
 }
