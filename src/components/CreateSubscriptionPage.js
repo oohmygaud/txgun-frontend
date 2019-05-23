@@ -33,6 +33,7 @@ export class CreateSubscription extends React.Component {
         notify_url: "",
         watch_token_transfers: false,
         daily_emails: false,
+        default_email: true,
         monthly_emails: false,
         include_pricing_data: false,
         specific_contract_calls: false,
@@ -148,23 +149,27 @@ export class CreateSubscription extends React.Component {
             />
             {this.state.realtime_emails ?
                 <div>
-                    <TextField
-                        id="notify_email"
-                        label="Notify Email"
-                        onChange={(e) => this.setState({ notify_email: e.target.value })}
-                        value={this.state.notify_email}
-                        disabled={this.state.default_email}
-                    />
                     <FormControlLabel
                         control={
                             <Checkbox
                                 onChange={(e) => this.OnChangeDefaultEmailSwitch(e)}
                                 value='default_email'
                                 color='secondary'
+                                checked={this.state.default_email}
                             />
                         }
                         label='Default Email'
                     />
+                    {this.state.default_email ? null : 
+                        <TextField
+                            id="notify_email"
+                            label="Notify Email"
+                            onChange={(e) => this.setState({ notify_email: e.target.value })}
+                            value={this.state.notify_email}
+                            disabled={this.state.default_email}
+                        />
+                    }
+
                 </div>
                 : null}
 
@@ -172,11 +177,18 @@ export class CreateSubscription extends React.Component {
     }
 
     renderNotifyUrlField() {
+        const onChangeRealtimeWebhooks = (e) => {
+            let update = { realtime_webhooks: e.target.checked }
+            if(!e.target.checked)
+                update.notify_url = ""
+            this.setState(update)
+        }
+
         return <FormGroup row>
             <FormControlLabel
                 control={
                     <Switch
-                        onChange={(e) => this.setState({ realtime_webhooks: e.target.checked })}
+                        onChange={(e) => onChangeRealtimeWebhooks(e)}
                         value="realtime_webhooks"
                         color="primary"
                         checked={this.state.realtime_webhooks}
@@ -185,29 +197,17 @@ export class CreateSubscription extends React.Component {
                 label="Real-time Webhook Notifications"
             />
 
-            {this.state.realtime_webhooks ? 
+            {this.state.realtime_webhooks ?
                 <div>
                     <TextField id="notify_url"
-                label="Notify Url"
-                onChange={(e) => this.setState({ notify_url: e.target.value })}
-                value={this.state.notify_url}
-                disabled={this.state.default_url}
-            />
-            {this.state.default_url ?
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            onChange={(e) => this.OnChangeDefaultURLSwitch(e)}
-                            value='default_url'
-                            color='secondary'
-                        />
-                    }
-                    label='Default URL'
-                />
-                : null}
+                        label="Notify Url"
+                        onChange={(e) => this.setState({ notify_url: e.target.value })}
+                        value={this.state.notify_url}
+                        disabled={this.state.default_url}
+                    />
                 </div>
-            : null}
-            
+                : null}
+
         </FormGroup>
     }
 
@@ -284,11 +284,21 @@ export class CreateSubscription extends React.Component {
 
 
     static getDerivedStateFromProps(nextProps, state) {
+        const defaultState = {notify_email: nextProps.user && nextProps.user.email}
+
+        // If this is an edit page, we'll have props.subscription
+        // so fill in all the state values from the props.subscription
         if (nextProps.subscription && nextProps.subscription.id != state.id
             && nextProps.subscription.id == nextProps.match.params.id)
+        {
             return {
                 ...nextProps.subscription
             };
+        }
+        else
+        {
+            return defaultState;
+        }
     }
 
     componentDidMount() {
@@ -484,6 +494,8 @@ curl -X${this.props.subscription ? "PUT" : "POST"} \\
     "watch_token_transfers": "${this.state.watch_token_transfers}",
     "include_pricing_data": "${this.state.include_pricing_data}",
     "specific_contract_calls": "${this.state.specific_contract_calls}",
+    "realtime_emails": "${this.state.realtime_emails}",
+    "realtime_webhooks": "${this.state.realtime_webhooks}",
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
     "daily_emails": "${this.state.daily_emails}",
@@ -511,6 +523,8 @@ requests.${this.props.subscription ? "put" : "post"}(
 "watch_token_transfers": "${this.state.watch_token_transfers}",
 "include_pricing_data": "${this.state.include_pricing_data}",
 "specific_contract_calls": "${this.state.specific_contract_calls}",
+"realtime_emails": "${this.state.realtime_emails}",
+"realtime_webhooks": "${this.state.realtime_webhooks}",
 "notify_email": "${this.state.notify_email}",
 "notify_url": "${this.state.notify_url}",
 "daily_emails": "${this.state.daily_emails}",
