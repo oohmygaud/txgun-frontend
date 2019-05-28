@@ -1,53 +1,90 @@
 import React from 'react';
-import Header from './Header';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Image from 'material-ui-image';
-import {Link} from 'react-router-dom';
-import gun from '../assets/img/gun5.png';
-
+import palette from '../theme/palette'
+import PrismCode from 'react-prism';
+import { baseURL } from '../store/api';
+import Card from '@material-ui/core/Card';
+require('prismjs');
+require('prismjs/components/prism-bash')
+require('prismjs/themes/prism-okaidia.css');
 
 const LandingPage = () => (
   <div className="landingPagebodyComponent">
 
-<br/>
-<Typography variant="display3" gutterBottom align="center">
-        Welcome to TX Gun
-      </Typography>
-    
-   <Grid container spacing={24} >
-        <Grid item xs={12} md={12}>
-          <Typography variant="body2" gutterBottom align="center">
-          TXGun is a SaaS web service for developers to be notified in configurable manners of transactions and events processed on a blockchain.
-      </Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography gutterBottom align="left" style={{paddingLeft:20}}>
-        {`
-         Integrating blockchain technology and cryptography components is highly complicated and a barrier to entry for adoption into blockchain ecosystems for small and medium companies that just need to be notified of payments or changes to a blockchain. Our goal is to design an easy-to-use system, billed on API Credits, for consuming and processing transactions from various blockchains to be forwarded as formatted emails, webhooks, websockets, or summary reports.
-        `}
-        <Link to="/start"> <Button color="primary"  align="left" style={{marginLeft:20}}>
-        Get Started
-      </Button></Link>
+    <br />
+    <div className="hero-image" style={{ background: palette.dark_purple }}>
+      <Grid container>
+        <Grid item md={6} style={{ padding: '2em' }}>
 
-       <Button color="primary"  align="left" style={{marginLeft:20}}>
-        Know More
-      </Button>
-      </Typography>
+          <div className="hero-text">
+            <h1>Notification Service for Developers</h1>
+            <p>TXGun is a SaaS web service for developers to be notified in configurable manners of transactions and events processed on a blockchain.</p>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: '1em' }}
+            >
+              Learn More
+        </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ marginLeft: '1em' }}
+            >
+              Register
+        </Button>
+          </div>
+
         </Grid>
-         <Grid item xs={6}>
-         <img src={gun} alt="Gun" style={{height:'100%', width:'100%'}}/>
-        </Grid>
+        <Grid item md={6} style={{ padding:'2em' }}>
         
+        <PrismCode component="pre" className="language-bash">
+
+{`curl -XPOST \\
+-H "Content-Type: application/json" \\
+-H "Authorization: Your API Key Here" \\
+-d '{
+"nickname": "Watch All Binance Transactions",
+"watched_address": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+"daily_emails": "true",
+"notify_email": "accounting@example.com",
+"realtime_webhooks": "true",
+"notify_url": "mysite.com/payment_received.php",
+}' ${baseURL}subscriptions/
+`}
+
+</PrismCode>
+
         </Grid>
+      </Grid>
+    </div>
 
-     <Grid container spacing={24} >
-        <Grid item xs={12} md={12}>
 
-          </Grid>
-          </Grid>
+
+    <Grid container>
+      <Grid item sm={4} style={{ padding: '3em' }}>
+        <div>
+          <h3>
+            Here is some information on why you should use our service.
+          </h3>
+        </div>
+      </Grid>
+      <Grid item sm={4} style={{ padding: '3em' }}>
+        <div>
+          <h3>
+            Here is some information on why you should use our service.
+          </h3>
+        </div>
+      </Grid>
+      <Grid item sm={4} style={{ padding: '3em' }}>
+        <div>
+          <h3>
+            Here is some information on why you should use our service.
+          </h3>
+        </div>
+      </Grid>
+    </Grid>
 
   </div>
 );

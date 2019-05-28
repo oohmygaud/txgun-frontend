@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 require('prismjs');
-require('prismjs/themes/prism.css');
+require('prismjs/themes/prism-okaidia.css');
 import PrismCode from 'react-prism';
 import { baseURL } from '../store/api';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -363,7 +363,7 @@ export class CreateSubscription extends React.Component {
                             {this.renderSpecificContractCalls()}
 
                             {this.state.specific_contract_calls && this.props.abi && this.props.abi.abi ?
-
+                                (this.props.abi.abi == "Contract source code not verified" ? this.props.abi.abi :
                                 this.props.abi.abi.map(member => (
                                     member.type == "function" && member.stateMutability != "view" && !member.constant ?
                                         <FormControlLabel
@@ -377,7 +377,7 @@ export class CreateSubscription extends React.Component {
                                             }
                                             label={member.name}
                                         /> : null
-                                ))
+                                )))
                                 : this.props.abi && this.props.abi.error}
 
                         </FormGroup>
@@ -413,6 +413,21 @@ export class CreateSubscription extends React.Component {
                             {!this.props.subscription ? "Create Subscription" : "Edit Subscription"}
                         </Typography>
                     </Button>
+
+                    {this.props.subscription ?
+                        !this.props.subscription.archived_at ?
+                            <Button 
+                                color="secondary"
+                                style={{ marginTop: "1em" }} 
+                                onClick={(e) => this.props.archive(this.props.subscription.id)} >
+                                <ArchiveIcon />Archive
+                            </Button>
+                            :
+                            <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
+                                <UnarchiveIcon />Unarchive
+                            </Button>
+
+                        : null}
 
                 </form>
 
@@ -467,17 +482,7 @@ export class CreateSubscription extends React.Component {
                         </FormControl>
                         : null}
 
-                    {this.props.subscription ?
-                        !this.props.subscription.archived_at ?
-                            <Button color="secondary" onClick={(e) => this.props.archive(this.props.subscription.id)} >
-                                <ArchiveIcon />Archive
-                            </Button>
-                            :
-                            <Button color="secondary" onClick={(e) => this.props.unarchive(this.props.subscription.id)} >
-                                <UnarchiveIcon />Unarchive
-                            </Button>
-
-                        : null}
+                    
 
                     {!this.state.widget_python ?
                         <PrismCode component="pre" className="language-javascript">

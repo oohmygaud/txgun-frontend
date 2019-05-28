@@ -14,6 +14,11 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 class SubscriptionPage extends React.Component {
 
     state = {
@@ -81,8 +86,8 @@ class SubscriptionPage extends React.Component {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Watched Address</TableCell>
                             <TableCell>Nickname</TableCell>
+                            <TableCell>Watched Address</TableCell>
                             <TableCell>Status</TableCell>
                         </TableRow>
                     </TableHead>
@@ -90,9 +95,16 @@ class SubscriptionPage extends React.Component {
                         {this.props.subscriptions.results.map(subscription => (
                             <TableRow key={subscription.id}>
                                 <TableCell>
-                                    <Link to={'/subscriptions/' + subscription.id}>{subscription.watched_address}</Link>
+                                    <Link 
+                                        style={{ color: 'blue' }}
+                                        to={'/subscriptions/' + subscription.id}
+                                    >
+                                        {subscription.nickname}
+                                    </Link>
                                 </TableCell>
-                                <TableCell>{subscription.nickname}</TableCell>
+                                <TableCell>
+                                    {subscription.watched_address}
+                                </TableCell>
                                 <TableCell>
                                     <FormControlLabel control={
                                         <Switch
@@ -105,7 +117,7 @@ class SubscriptionPage extends React.Component {
                                             checked={subscription.status == "active"}
                                         />
                                     }
-                                    label={subscription.status}
+                                    label={capitalize(subscription.status)}
                                     />
                                 </TableCell>
                             </TableRow>

@@ -209,7 +209,7 @@ position: relative;
 
 .landingPagebodyComponent{
 
-    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+    background: white ;
      min-height: 85vh;
      /*text-align: center;*/
      
@@ -234,9 +234,8 @@ position: relative;
        .loginheaderpart{
         text-align: center;
     margin-top: 3em;
-    opacity: 0.7;
     padding: 15px;
-    background: #0766b9;
+    background: #636a9a;
 }
 
 .loginformgroup div{
@@ -264,9 +263,8 @@ position: relative;
        .loginheaderpart{
         text-align: center;
     margin-top: 3em;
-    opacity: 0.7;
     padding: 15px;
-    background: #0766b9;
+    background: #636a9a;
 }
 
 .loginformgroup div{
@@ -278,5 +276,27 @@ position: relative;
 
 }
 
-body {
+body, html {
+    height: 100%;
+}
+
+/* The hero image */
+.hero-image {
+    /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+  
+    /* Set a specific height */
+    min-height: 50vh;
+    margin-top: -20px;
+  
+    /* Position and center the image to scale nicely on all screens */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+  
+/* Place text in the middle of the image */
+.hero-text {
+    text-align: center;
+    color: white;
 }

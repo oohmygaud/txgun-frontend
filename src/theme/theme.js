@@ -1,4 +1,4 @@
-
+import palette from './palette'
 
 import {createMuiTheme } from '@material-ui/core/styles';
 
@@ -8,9 +8,9 @@ export const theme = createMuiTheme({
 
       type: 'light',
     primary: {
-        main:'#e20d9b' // customise your main color here
+        main: palette.light_purple // customise your main color here
     },
-    secondary: {main:'#e2540d' },
+    secondary: {main: palette.green },
 
      error: {main:'#ca0909' },
 
