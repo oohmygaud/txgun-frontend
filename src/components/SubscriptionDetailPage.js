@@ -33,7 +33,7 @@ class SubscriptionDetailPage extends React.Component {
                 </Grid>
 
                 <Grid item sm={6} xs={8} style={{marginBottom:'0.5em', textAlign:"center"}} >
-                    <h2>{this.props.subscription.nickname}</h2>
+                    <h2>{this.props.subscription.nickname} | Transactions</h2>
                 </Grid>
 
                 <Grid item sm xs={4} style={{ marginTop: '1em', textAlign:"right" }}>

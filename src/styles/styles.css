@@ -84,11 +84,10 @@ color:inherit;
 
 .footer-container-box {
     background-color: #f1f3f4;
-    height:12vh;
+    min-height: 8vh;
     text-align: center;
     padding-top:10px;
     color:black;
-    margin-top:14px;
 }
 
 .footer-container-box h1{
@@ -285,7 +284,7 @@ body, html {
     /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
   
     /* Set a specific height */
-    min-height: 50vh;
+    
     margin-top: -20px;
   
     /* Position and center the image to scale nicely on all screens */
