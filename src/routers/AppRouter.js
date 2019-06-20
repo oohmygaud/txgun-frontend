@@ -17,6 +17,7 @@ import APIKeyDetail from '../components/APIKeyDetail';
 import CreateAPIKey from '../components/CreateAPIKey';
 import APICreditPage from '../components/APICreditPage';
 import Registration from '../components/Registration';
+import LearnMore from '../components/LearnMore';
 
 
 const AppRouter = ({history}) => (
@@ -36,6 +37,7 @@ const AppRouter = ({history}) => (
          <PrivateRoute path="/api_keys/:id" component={APIKeyDetail} />
          <PrivateRoute path="/api_keys" component={APIKeyPage} />
          <PrivateRoute path="/billing" component={APICreditPage} />
+         <PublicRoute path="/learn_more" component={LearnMore} />
        
         <Route path="/login" component={LoginPage}  />
         <PublicRoute path="/about" component={AboutPage} />

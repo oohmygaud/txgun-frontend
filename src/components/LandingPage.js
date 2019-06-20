@@ -32,13 +32,15 @@ class LandingPage extends React.Component {
             <div className="hero-text">
               <h1>Ethereum Transaction Notifications for Developers in a Hurry</h1>
               <p style={{ fontSize: 18 }}>TXGun is a SaaS web service for developers to be notified in configurable manners of transactions and events processed on a blockchain.</p>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginRight: '1em', marginTop: '2em' }}
-              >
-                Learn More
+              <Link to={'/learn_more'}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ marginRight: '1em', marginTop: '2em' }}
+                >
+                  Learn More
         </Button>
+              </Link>
               <Link to={'/registration'}>
                 <Button
                   variant="contained"
@@ -55,9 +57,9 @@ class LandingPage extends React.Component {
 
             <AppBar position="static">
               <Tabs value={this.state.tab} onChange={(e, v) => this.setState({ tab: v })} variant='fullWidth'>
-                <Tab label="Get Paid" style={{minWidth: 120}} />
-                <Tab label="Watch Exchanges" style={{minWidth: 120}} />
-                <Tab label="Method Calls" style={{minWidth: 120}} />
+                <Tab label="Get Paid" style={{ minWidth: 120 }} />
+                <Tab label="Watch Exchanges" style={{ minWidth: 120 }} />
+                <Tab label="Method Calls" style={{ minWidth: 120 }} />
               </Tabs>
             </AppBar>
             {this.state.tab === 0 &&
