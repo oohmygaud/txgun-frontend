@@ -34,6 +34,7 @@ export class CreateSubscription extends React.Component {
         watch_token_transfers: false,
         daily_emails: false,
         default_email: true,
+        weekly_emails: false,
         monthly_emails: false,
         include_pricing_data: false,
         specific_contract_calls: false,
@@ -43,7 +44,8 @@ export class CreateSubscription extends React.Component {
         abi_methods: {},
         network: null,
         realtime_emails: true,
-        realtime_webhooks: false
+        realtime_webhooks: false,
+        low_balance_warning: false
     }
 
     OnSubmit(e) {
@@ -253,6 +255,20 @@ export class CreateSubscription extends React.Component {
         />
     }
 
+    renderLowBalanceWarning() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ low_balance_warning: e.target.checked })}
+                    value="low_balance_warning"
+                    color="primary"
+                    checked={this.state.low_balance_warning}
+                />
+            }
+            label="Low Balance Warning"
+        />
+    }
+
     renderDailyNotifications() {
         return <FormControlLabel
             control={
@@ -264,6 +280,20 @@ export class CreateSubscription extends React.Component {
                 />
             }
             label="Daily Email Summaries"
+        />
+    }
+
+    renderWeeklyNotifications() {
+        return <FormControlLabel
+            control={
+                <Switch
+                    onChange={(e) => this.setState({ weekly_emails: e.target.checked })}
+                    value="weekly_emails"
+                    color="primary"
+                    checked={this.state.weekly_emails}
+                />
+            }
+            label="Weekly Email Summaries"
         />
     }
 
@@ -396,7 +426,11 @@ export class CreateSubscription extends React.Component {
 
                             {this.renderDailyNotifications()}
 
+                            {this.renderWeeklyNotifications()}
+
                             {this.renderMonthlyNotifications()}
+
+                            {this.renderLowBalanceWarning()}
 
                         </FormGroup>
 
@@ -504,7 +538,9 @@ curl -X${this.props.subscription ? "PUT" : "POST"} \\
     "notify_email": "${this.state.notify_email}",
     "notify_url": "${this.state.notify_url}",
     "daily_emails": "${this.state.daily_emails}",
-    "monthly_emails": "${this.state.monthly_emails}"
+    "weekly_emails": "${this.state.weekly_emails}",
+    "monthly_emails": "${this.state.monthly_emails}",
+    "low_balance_warning": "${this.state.low_balance_warning}"
     
     
     
@@ -533,7 +569,9 @@ requests.${this.props.subscription ? "put" : "post"}(
 "notify_email": "${this.state.notify_email}",
 "notify_url": "${this.state.notify_url}",
 "daily_emails": "${this.state.daily_emails}",
-"monthly_emails": "${this.state.monthly_emails}"
+"weekly_emails": "${this.state.weekly_emails}",
+"monthly_emails": "${this.state.monthly_emails}",
+"low_balance_warning": "${this.state.low_balance_warning}"
 
 })
 
