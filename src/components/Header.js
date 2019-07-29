@@ -104,6 +104,10 @@ handleClose = event => {
             <Link to='/'>TX Gun</Link>
           </Typography>
 
+          <Typography>
+            {this.props.username}
+          </Typography>
+
           {
             this.conditRenderEssential()
              }

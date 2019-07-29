@@ -123,7 +123,7 @@ function* getABI(action) {
         yield put({ type: "GET_ABI_SUCCEEDED", data: response.data })
     }
     catch(e) {
-        console.log('Error unarchiving subscription', e)
+        console.log('Error getting ABI', e)
     }
 }
 

@@ -21,10 +21,14 @@ class LandingPage extends React.Component {
     tab: 0
   }
   render() {
+    let heroStyle = {
+	background: 'url(/confectionary-blue.png) ' + palette.dark_purple
+    }
+
     return <div className="landingPagebodyComponent">
 
       <br />
-      <div className="hero-image" style={{ background: palette.dark_purple }}>
+      <div className="hero-image" style={heroStyle}>
         <Grid container>
           <Grid item lg={2}></Grid>
           <Grid item lg={4} md={6} style={{ padding: '2em' }}>

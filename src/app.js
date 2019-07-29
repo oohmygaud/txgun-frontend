@@ -17,7 +17,7 @@ export const history = createBrowserHistory()
 
 const store = configureStore(history);
 store.subscribe(() => {
-  console.log("New state:", store.getState());
+  console.log("New redux state:", store.getState());
 });
 
 

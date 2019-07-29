@@ -31,6 +31,12 @@ export const getProfile =()=>({
     
 });
 
+export const editProfile =(data)=>({
+    type:'EDIT_PROFILE',
+    data
+    
+});
+
 export const doRefreshToken =()=>({
     type:'DO_REFRESH_TOKEN',
 });

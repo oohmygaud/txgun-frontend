@@ -56,7 +56,7 @@ function* startLogout(action) {
 function* getProfile(action) {
     try {
         const api = getApi();
-        const response = yield call(api.get, 'accounts/profile')
+        const response = yield call(api.get, 'accounts/profile/')
         console.log("You're already logged in as", response.data.username)
         yield put({ type: "GET_PROFILE_SUCCEEDED", user: response.data, username: response.data.username, user_id: response.data.id });
 
@@ -64,6 +64,20 @@ function* getProfile(action) {
     catch (e) {
         console.log('authtoken invalid, deleting')
         localStorage.removeItem('authToken')
+    }
+}
+
+function* editProfile(action) {
+    try {
+        const api = getApi()
+        const response = yield call(api.put, 'accounts/profile/', action.data)
+        yield put({ type: "EDIT_PROFILE_SUCCEEDED", data: response.data })
+        yield put(push('/home'))
+        yield put({ type: 'GET_PROFILE' })
+
+    }
+    catch (e) {
+        console.log('Error editing profile', e)
     }
 }
 
@@ -107,12 +121,15 @@ function* register(action) {
 }
 
 
+
+
 function* authSaga() {
     yield takeLatest("LOGIN", startLogin);
     yield takeLatest("LOGOUT", startLogout);
     yield takeLatest("GET_PROFILE", getProfile);
     yield takeLatest("DO_REFRESH_TOKEN", doRefreshToken);
     yield takeLatest("REGISTER", register);
+    yield takeLatest("EDIT_PROFILE", editProfile);
 }
 
 export default authSaga;

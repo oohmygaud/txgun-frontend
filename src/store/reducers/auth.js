@@ -25,6 +25,11 @@ export default (state = {}, action) => {
         case 'REGISTRATION_DENIED':
             console.log('Registration Denied');
             return { ...state, registration_errors: action.errors}
+
+        case 'EDIT_PROFILE_SUCCEEDED':
+            console.log('Profile Edited');
+            return { ...state, edit_profile_succeeded: true}
+
         default: return state;
     }
 };

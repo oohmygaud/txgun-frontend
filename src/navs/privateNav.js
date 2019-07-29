@@ -8,6 +8,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import RssFeedIcon from '@material-ui/icons/RssFeed';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import AccountIcon from '@material-ui/icons/AccountCircle';
 
 /* import your desired icon from material-ui icons library */
 import {NavLink} from 'react-router-dom';
@@ -19,6 +20,11 @@ export const publicNavs = [
         name:'Dashboard',
         icon:<HomeIcon/>
     },
+    {
+        url:'/profile',
+        name:'Profile',
+        icon:<AccountIcon />
+    }, 
     {
         url:'/subscriptions',
         name:'Subscriptions',
