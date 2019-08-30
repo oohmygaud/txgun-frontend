@@ -1,6 +1,5 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-
 import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,10 +9,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-
-
-
-
 import {Link} from 'react-router-dom';
 import PublicNavList from '../navs/publicNav';
 import PrivateNavList from '../navs/privateNav';
@@ -67,42 +62,28 @@ handleClose = event => {
 
  
 
-         <Drawer open={this.state.open} onClose={this.toggleDrawer(false)} >
+         <Drawer open={this.state.open} onClose={this.toggleDrawer(false)} anchor="right" >
           <div
             tabIndex={0}
             role="button"
             
            >
             <div className="sidelistwrapper">
-      
-
 
       {!this.props.username && (<React.Fragment><PublicNavList/></React.Fragment>)}
+      {this.props.username && (<React.Fragment><PrivateNavList/></React.Fragment>)}
 
-
-      {/*start if testing*/}
- 
-{this.props.username && (<React.Fragment>
-  <PrivateNavList/>
-  </React.Fragment>
-  )}
-        {/* end of testing */}
-            
-         
-        
       </div>
           </div>
         </Drawer>
+
 <div className="appbarwrapper">
   
         <AppBar position="static">
         <Toolbar>
-          <IconButton className="iconbuttonsyle" color="inherit" aria-label="Menu" onClick={this.onLeftIconButtonClick}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="title" color="inherit" className="headertypoclass" >
-            <Link to='/'>TX Gun</Link>
-          </Typography>
+          <span color="inherit" className="headertypoclass">
+            <Link to='/'><img src={'txgunlogoH.svg'} style={{ marginTop: 4, maxWidth: "80%", maxHeight: '60px'}}/></Link>
+          </span>
 
           <Typography>
             {this.props.username}
@@ -111,7 +92,10 @@ handleClose = event => {
           {
             this.conditRenderEssential()
              }
-          
+
+          <IconButton className="iconbuttonsyle" color="inherit" aria-label="Menu" onClick={this.onLeftIconButtonClick}>
+            <MenuIcon />
+          </IconButton>          
         </Toolbar>
       </AppBar>
       </div>
