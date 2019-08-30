@@ -31,7 +31,7 @@ class LandingPage extends React.Component {
       <div className="hero-image" style={heroStyle}>
         <Grid container>
           <Grid item lg={2}></Grid>
-          <Grid item lg={4} md={6} style={{ padding: '2em' }}>
+          <Grid item lg={4} md={6} xs={12} style={{ padding: '2em' }}>
 
             <div className="hero-text">
               <h1>Ethereum Transaction Notifications for Developers in a Hurry</h1>
@@ -57,7 +57,7 @@ class LandingPage extends React.Component {
             </div>
 
           </Grid>
-          <Grid item lg={4} md={6} style={{ padding: '2em', overflow: 'hidden' }}>
+          <Grid item lg={4} md={6} xs={12} style={{ padding: '2em', overflow: 'hidden' }}>
 
             <AppBar position="static">
               <Tabs value={this.state.tab} onChange={(e, v) => this.setState({ tab: v })} variant='fullWidth'>

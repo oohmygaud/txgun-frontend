@@ -20,6 +20,11 @@ export const theme = createMuiTheme({
          danger:'#b71c1c'
      },
 
+  
+  typography: {
+    useNextVariants: true,
+  },
+
     
     // Used by `getContrastText()` to maximize the contrast between the background and
     // the text.

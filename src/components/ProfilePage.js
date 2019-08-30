@@ -90,7 +90,7 @@ class ProfilePage extends React.Component {
                                 checked={this.state.disable_balance_warning_emails}
                             />
                         }
-                            label={this.state.disable_balance_warning_emails ? 
+                            label={this.state.disable_balance_warning_emails ?
                                 "Enable Low Credit Balance Emails" : "Disable Low Credit Balance Emails"}
                         />
                     </FormGroup>
@@ -101,10 +101,7 @@ class ProfilePage extends React.Component {
                         variant="contained"
                         color="primary"
                         onClick={this.OnSubmit}>
-
-                        <Typography variant="button" gutterBottom className="logintypography">
-                            Update
-                    </Typography>
+                        Update
                     </Button>
                 </form>
             </Card>

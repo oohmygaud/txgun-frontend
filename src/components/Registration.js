@@ -5,7 +5,6 @@ import Card from '@material-ui/core/Card';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 
 class Registration extends React.Component {
 
@@ -18,12 +17,12 @@ class Registration extends React.Component {
     };
 
     showErrors(name) {
-        return (this.props.errors && this.props.errors[name] && 
-         this.props.errors[name].map(error=> (
-            <div value={error} key={error}>
-                <em>{error}</em>
-            </div> 
-        )))
+        return (this.props.errors && this.props.errors[name] &&
+            this.props.errors[name].map(error => (
+                <div value={error} key={error}>
+                    <em>{error}</em>
+                </div>
+            )))
     }
 
     render() {
@@ -58,13 +57,11 @@ class Registration extends React.Component {
                     {this.showErrors('password_confirm')}
                     {this.showErrors('non_field_errors')}
                     <Button type="submit"
-                            variant="contained"
-                            color="primary"
-                            onClick={this.OnSubmit}>
-                            <Typography variant="button" gutterBottom className="logintypography">
-                                Register
-                            </Typography>
-                        </Button>
+                        variant="contained"
+                        color="primary"
+                        onClick={this.OnSubmit}>
+                        Register
+                    </Button>
                 </form>
             </Card>
         </React.Fragment>

@@ -3,12 +3,7 @@ import { connect } from 'react-redux';
 import { login } from '../store/actions/auth';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Key from '@material-ui/icons/VpnKey';
 import Button from '@material-ui/core/Button';
@@ -42,13 +37,13 @@ export class LoginPage extends Component {
 
         <Paper className="loginPaper">
           <div className="loginheaderpart">
-            <Typography variant="display3" gutterBottom className="loginpageheader">
+            <h2>
               Login
-      </Typography>
+            </h2>
           </div>
-          <Typography variant="headline" component="h3">
+          <h3>
             Login to your account
-        </Typography>
+          </h3>
           <form onSubmit={this.OnClickLogin}>
             <div className="loginformgroup">
 
@@ -68,10 +63,9 @@ export class LoginPage extends Component {
             </div>
             <Typography>{this.props.error ? "Incorrect Username or Password" : null}</Typography>
 
-            <Button type="submit" variant="contained" color="primary" onClick={this.OnClickLogin}><Typography variant="button" gutterBottom className="logintypography">
-
+            <Button type="submit" variant="contained" color="primary" onClick={this.OnClickLogin}>
               Login
-      </Typography></Button>
+            </Button>
           </form>
         </Paper>
       </div>
