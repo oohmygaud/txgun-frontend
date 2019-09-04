@@ -14,7 +14,7 @@ class ProfilePage extends React.Component {
       disable_balance_warning_emails: false
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.props.getProfile(this.props.match.params.id)
     }
 
@@ -26,7 +26,7 @@ class ProfilePage extends React.Component {
       this.props.editProfile(form_data)
     };
 
-    componentWillReceiveProps (nextProps) {
+    UNSAFE_componentWillReceiveProps (nextProps) {
       if (nextProps.user) {
         console.log('Setting values', nextProps.user)
         this.setState({

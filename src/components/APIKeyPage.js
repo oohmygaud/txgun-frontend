@@ -23,7 +23,7 @@ class APIKeyPage extends React.Component {
       this.setState({ page: page })
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.props.loadAPIKeyList()
     }
 

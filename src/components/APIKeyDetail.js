@@ -34,7 +34,7 @@ class APIKeyDetail extends React.Component {
       this.setState({ open: false })
     };
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.props.loadAPIKeyDetail(this.props.match.params.id)
     }
 

@@ -40,7 +40,7 @@ class SubscriptionPage extends React.Component {
       this.setState({ page: page })
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.props.loadSubscriptionList(this.searchOptions())
     }
 

@@ -17,7 +17,7 @@ class SubscriptionDetailPage extends React.Component {
       this.setState({ page: page })
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
       this.props.loadSubscriptionDetail(this.props.match.params.id)
       this.props.loadSubscriptionTransactions(this.props.match.params.id)
     }
