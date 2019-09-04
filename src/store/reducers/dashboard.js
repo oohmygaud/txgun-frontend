@@ -1,9 +1,8 @@
 export default (state = {}, action) => {
-    switch (action.type) {
+  switch (action.type) {
+    case 'LOAD_DASHBOARD_SUCCEEDED':
+      return { ...state, data: action.data }
 
-        case 'LOAD_DASHBOARD_SUCCEEDED':
-            return { ...state, data: action.data };
-
-        default: return state;
-    }
-};
+    default: return state
+  }
+}

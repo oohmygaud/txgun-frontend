@@ -1,4 +1,4 @@
-export const loadDashboard =()=>({
-    type:'LOAD_DASHBOARD',
-    
-});
+export const loadDashboard = () => ({
+  type: 'LOAD_DASHBOARD'
+
+})

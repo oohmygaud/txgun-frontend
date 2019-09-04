@@ -1,70 +1,64 @@
-import React from 'react';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import React from 'react'
+import Paper from '@material-ui/core/Paper'
+import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import Snackbar from '@material-ui/core/Snackbar'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 
 export class ContactPage extends React.Component {
-
   state = {
     messageopen: false,
-    messageInfo: {},
+    messageInfo: {}
   }
 
   giveSuccessMessage = (message) => {
-    let newmsg = {
+    const newmsg = {
       message,
       key: new Date().getTime()
-    };
+    }
 
     this.setState({
       messageopen: true,
       messageInfo: newmsg
 
-    });
-
+    })
   };
 
   onSubmit = () => {
+    this.giveSuccessMessage('send successfully ')
 
-    this.giveSuccessMessage('send successfully ');
-
-    //this.props.startAddLogin(user);
+    // this.props.startAddLogin(user);
 
     // this.props.history.push('/');
-
   };
+
   handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-      return;
+      return
     }
-    this.setState({ messageopen: false });
+    this.setState({ messageopen: false })
   };
 
-  render() {
-
-    const { message, key } = this.state.messageInfo;
-
+  render () {
+    const { message, key } = this.state.messageInfo
 
     return (
       <div className="contact-page-wrapper">
-
 
         <Snackbar
           key={key}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'left'
           }}
           open={this.state.messageopen}
           autoHideDuration={2000}
           onClose={this.handleClose}
 
           ContentProps={{
-            'aria-describedby': 'message-id',
+            'aria-describedby': 'message-id'
           }}
           message={<span id="message-id">{message}</span>}
           action={[
@@ -77,7 +71,7 @@ export class ContactPage extends React.Component {
               onClick={this.handleClose}
             >
               <CloseIcon />
-            </IconButton>,
+            </IconButton>
           ]}
         />
         <Grid container spacing={24} justify="center">
@@ -117,7 +111,6 @@ export class ContactPage extends React.Component {
                   />
                 </Grid>
 
-
                 <Grid item xs={12} lg={6} md={6} style={{ marginTop: 10 }}>
                   <TextField
                     id="Firstname"
@@ -127,7 +120,6 @@ export class ContactPage extends React.Component {
                     margin="normal"
                   />
                 </Grid>
-
 
                 <Grid item xs={12} lg={12} md={12} style={{ marginTop: 10 }}>
                   <TextField
@@ -144,19 +136,13 @@ export class ContactPage extends React.Component {
                   <Button type="button" color="primary" variant="raised" onClick={this.onSubmit}>Send</Button>
                 </Grid>
 
-
               </Grid>
             </Paper>
           </Grid>
         </Grid>
       </div>
-    );
+    )
   }
-
-
 }
 
-
-
-
-export default ContactPage;
+export default ContactPage

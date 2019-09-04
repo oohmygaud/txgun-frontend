@@ -4,12 +4,15 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'airbnb',
+    'eslint:recommended',
+    'plugin:react/recommended'
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  parser: "babel-eslint",
+
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -21,5 +24,7 @@ module.exports = {
     'react',
   ],
   rules: {
+	"react/jsx-filename-extension": [0],
+	"react/prop-types": [0],
   },
 };

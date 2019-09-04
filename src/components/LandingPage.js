@@ -1,28 +1,29 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import React from 'react'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
 import palette from '../theme/palette'
-import PrismCode from 'react-prism';
-import { baseURL } from '../store/api';
-import Card from '@material-ui/core/Card';
-require('prismjs');
+import PrismCode from 'react-prism'
+import { baseURL } from '../store/api'
+import { Link } from 'react-router-dom'
+import WebIcon from '@material-ui/icons/Web'
+import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly'
+import MoneyOffIcon from '@material-ui/icons/MoneyOff'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import AppBar from '@material-ui/core/AppBar'
+/* global require */
+require('prismjs')
 require('prismjs/components/prism-bash')
-require('prismjs/themes/prism-okaidia.css');
-import { Link } from 'react-router-dom';
-import WebIcon from '@material-ui/icons/Web';
-import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly';
-import MoneyOffIcon from '@material-ui/icons/MoneyOff';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AppBar from '@material-ui/core/AppBar';
+require('prismjs/themes/prism-okaidia.css')
 
 class LandingPage extends React.Component {
   state = {
     tab: 0
   }
-  render() {
-    let heroStyle = {
-	background: 'url(/confectionary-blue.png) ' + palette.dark_purple
+
+  render () {
+    const heroStyle = {
+      background: 'url(/confectionary-blue.png) ' + palette.dark_purple
     }
 
     return <div className="landingPagebodyComponent">
@@ -43,7 +44,7 @@ class LandingPage extends React.Component {
                   style={{ marginRight: '1em', marginTop: '2em' }}
                 >
                   Learn More
-        </Button>
+                </Button>
               </Link>
               <Link to={'/registration'}>
                 <Button
@@ -52,7 +53,7 @@ class LandingPage extends React.Component {
                   style={{ marginLeft: '1em', marginTop: '2em' }}
                 >
                   Try TXGun Now
-        </Button>
+                </Button>
               </Link>
             </div>
 
@@ -116,14 +117,10 @@ class LandingPage extends React.Component {
               </PrismCode>
             }
 
-
-
           </Grid>
           <Grid item lg={2}></Grid>
         </Grid>
       </div>
-
-
 
       <Grid container>
         <Grid item sm={4} style={{ padding: '3em', textAlign: 'center' }}>
@@ -131,10 +128,10 @@ class LandingPage extends React.Component {
             <WebIcon style={{ fontSize: 100 }} />
             <h3>
               For Developers
-          </h3>
+            </h3>
             <p>
               Simple APIs for you to start integrating with the Ethereum blockchain today.
-          </p>
+            </p>
           </div>
         </Grid>
         <Grid item sm={4} style={{ padding: '3em', textAlign: 'center' }}>
@@ -142,10 +139,10 @@ class LandingPage extends React.Component {
             <ChildFriendlyIcon style={{ fontSize: 100 }} />
             <h3>
               Easy to Use
-          </h3>
+            </h3>
             <p>
-              Don't install web3, don't run a node, just subscribe.
-          </p>
+              Don&apos;t install web3, don&apos;t run a node, just subscribe.
+            </p>
           </div>
         </Grid>
         <Grid item sm={4} style={{ padding: '3em', textAlign: 'center' }}>
@@ -153,17 +150,16 @@ class LandingPage extends React.Component {
             <MoneyOffIcon style={{ fontSize: 100 }} />
             <h3>
               Free in Beta
-          </h3>
+            </h3>
             <p>
               But you can send us beer money!
-          </p>
+            </p>
           </div>
         </Grid>
       </Grid>
 
     </div>
-
   }
 }
 
-export default LandingPage;
+export default LandingPage

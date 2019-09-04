@@ -1,13 +1,12 @@
-export const login =(username, password)=>({
-    type:'LOGIN',
-    username,
-    password
-});
+export const login = (username, password) => ({
+  type: 'LOGIN',
+  username,
+  password
+})
 
 // Asynchronous login action which will be used in other functions
 
 // export const startLogin = (user)=>{
-    
 
 // return ()=>{
 
@@ -16,35 +15,35 @@ export const login =(username, password)=>({
 //    login(user.uid);
 
 // }
-     
-// };
 
 // };
 
-export const logout =()=>({
-    type:'LOGOUT',
-    
-});
+// };
 
-export const getProfile =()=>({
-    type:'GET_PROFILE',
-    
-});
+export const logout = () => ({
+  type: 'LOGOUT'
 
-export const editProfile =(data)=>({
-    type:'EDIT_PROFILE',
-    data
-    
-});
+})
 
-export const doRefreshToken =()=>({
-    type:'DO_REFRESH_TOKEN',
-});
+export const getProfile = () => ({
+  type: 'GET_PROFILE'
+
+})
+
+export const editProfile = (data) => ({
+  type: 'EDIT_PROFILE',
+  data
+
+})
+
+export const doRefreshToken = () => ({
+  type: 'DO_REFRESH_TOKEN'
+})
 
 export const register = (username, email, password, password_confirm) => ({
-    type: "REGISTER",
-    username,
-    email,
-    password,
-    password_confirm
-});
+  type: 'REGISTER',
+  username,
+  email,
+  password,
+  password_confirm
+})
