@@ -100,7 +100,7 @@ handleClose = event => {
           <IconButton className="iconbuttonsyle" color="inherit" aria-label="Menu" onClick={this.onLeftIconButtonClick}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" className="headertypoclass" >
+          <Typography variant="h3" color="inherit" className="headertypoclass" >
             <Link to='/'>TX Gun</Link>
           </Typography>
 
