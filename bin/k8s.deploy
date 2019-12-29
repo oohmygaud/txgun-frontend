@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)
+
+VERSION=$(test -z "$1" && echo "latest" || echo "$1")
+test -z "$NAMESPACE" && echo "You must set NAMESPACE variable" && exit
+
+export IMAGE="$CI_REGISTRY_IMAGE:$VERSION"
+echo "Deploying $IMAGE in namespace $NAMESPACE..."
+./k8s.template $VERSION | kubectl apply -f- -n $NAMESPACE

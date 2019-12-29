@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CI_PROJECT_TITLE
+spec:
+  type: ClusterIP
+  ports:
+  - name: $CI_PROJECT_TITLE
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: $CI_PROJECT_TITLE
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $CI_PROJECT_TITLE
+spec:
+  selector:
+    matchLabels:
+      name: $CI_PROJECT_TITLE
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        name: $CI_PROJECT_TITLE
+        app: $CI_PROJECT_TITLE
+    spec:
+      containers:
+      - name: $CI_PROJECT_TITLE
+        image: $IMAGE
+        resources:
+          requests:
+            cpu: 250m
+            memory: 200Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        imagePullPolicy: Always
+        env:
+          - name: SERVICE
+            value: $CI_PROJECT_TITLE
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        ports:
+        - name: $CI_PROJECT_TITLE
+          containerPort: 80
+          protocol: TCP
+---
+
+# Source: gitlab/charts/gitlab/charts/unicorn/templates/ingress.yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: $CI_PROJECT_TITLE-https
+  labels:
+    app: $CI_PROJECT_TITLE
+
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`txgun.io`)
+    kind: Rule
+    priority: 1
+    services:
+    - name: $CI_PROJECT_TITLE
+      port: 80
+  tls:
+    certResolver: default
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: $CI_PROJECT_TITLE-http
+  labels:
+    app: $CI_PROJECT_TITLE
+
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`txgun.io`)
+    kind: Rule
+    middlewares:
+      - name: https-only
+        namespace: default
+    services:
+    - name: $CI_PROJECT_TITLE
+      port: 80
+
