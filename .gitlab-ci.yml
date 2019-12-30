@@ -13,8 +13,8 @@ compile site:
   stage: compile
   script:
     - yarn config set cache-folder ./cache/yarn
-    - yarn install
-    - yarn build
+    - npm install
+    - npm run build
   artifacts:
     expire_in: 1 week
     paths:
