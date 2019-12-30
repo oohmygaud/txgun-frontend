@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+cd $(dirname $0)/..
+
+bin/build
+
+docker push $CI_REGISTRY_IMAGE:latest

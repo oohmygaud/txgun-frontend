@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)
+
+export VERSION=$(test -z "$3" && echo "latest" || echo "$3")
+USAGE="Usage: k8s_deploy [version=latest]"
+
+export IMAGE="$CI_REGISTRY_IMAGE:$VERSION"
+export POD_IP="\$POD_IP"
+
+envsubst < ../deploy/main.yaml
