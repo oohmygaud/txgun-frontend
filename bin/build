@@ -5,4 +5,4 @@ cd $(dirname $0)/..
 
 npm run build
 
-docker build . -t ${CI_REGISTRY_IMAGE}:latest
+docker build . -t ${CI_PROJECT_TITLE} -t ${CI_REGISTRY_IMAGE}:latest
